@@ -1,0 +1,45 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.groups.getList</name>
+   <description>Retrieves a list of all groups. The list can be filtered.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>group_id</name>
+         <optional>1</optional>
+         <acceptArray>1</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>name</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <info>Use &quot;%&quot; as wildcard.</info>
+      </item>
+      <item>
+         <name>per_page</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <defaultValue>100</defaultValue>
+         <maxValue>1000</maxValue>
+      </item>
+      <item>
+         <name>page</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <defaultValue>0</defaultValue>
+      </item>
+      <item>
+         <name>order</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <info>id, name, nb_users, is_default</info>
+         <defaultValue>name</defaultValue>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

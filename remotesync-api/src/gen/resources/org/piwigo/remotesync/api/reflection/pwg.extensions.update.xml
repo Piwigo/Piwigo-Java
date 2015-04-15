@@ -1,0 +1,34 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.extensions.update</name>
+   <description>&lt;b&gt;Webmaster only.&lt;/b&gt;</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>type</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <info>plugins, languages, themes</info>
+      </item>
+      <item>
+         <name>id</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>revision</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>pwg_token</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

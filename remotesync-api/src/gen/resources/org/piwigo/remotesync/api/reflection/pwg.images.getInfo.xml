@@ -1,0 +1,28 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.images.getInfo</name>
+   <description>Returns information about an image.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>image_id</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>comments_page</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <defaultValue>0</defaultValue>
+      </item>
+      <item>
+         <name>comments_per_page</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <defaultValue>10</defaultValue>
+         <maxValue>20</maxValue>
+      </item>
+   </params>
+   <options/>
+</reflectionGetMethodDetailsResponse>

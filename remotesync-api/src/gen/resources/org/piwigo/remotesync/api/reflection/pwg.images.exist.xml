@@ -1,0 +1,22 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.images.exist</name>
+   <description>Checks existence of images.
+&lt;br&gt;Give &lt;b&gt;md5sum_list&lt;/b&gt; if $conf[uniqueness_mode]==md5sum. Give &lt;b&gt;filename_list&lt;/b&gt; if $conf[uniqueness_mode]==filename.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>md5sum_list</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>filename_list</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

@@ -1,0 +1,31 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.categories.delete</name>
+   <description>Deletes album(s).
+&lt;br&gt;&lt;b&gt;photo_deletion_mode&lt;/b&gt; can be &quot;no_delete&quot; (may create orphan photos), &quot;delete_orphans&quot;
+(default mode, only deletes photos linked to no other album) or &quot;force_delete&quot; (delete all photos, even those linked to other albums)</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>category_id</name>
+         <optional>0</optional>
+         <acceptArray>1</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>photo_deletion_mode</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <defaultValue>delete_orphans</defaultValue>
+      </item>
+      <item>
+         <name>pwg_token</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+      <post_only>1</post_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

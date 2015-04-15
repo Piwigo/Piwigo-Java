@@ -1,0 +1,34 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.groups.setInfo</name>
+   <description>Updates a group. Leave a field blank to keep the current value.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>group_id</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>name</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>is_default</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>bool</type>
+      </item>
+      <item>
+         <name>pwg_token</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+      <post_only>1</post_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

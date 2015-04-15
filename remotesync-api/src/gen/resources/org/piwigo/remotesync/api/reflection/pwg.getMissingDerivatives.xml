@@ -1,0 +1,101 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.getMissingDerivatives</name>
+   <description>Returns a list of derivatives to build.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>types</name>
+         <optional>1</optional>
+         <acceptArray>1</acceptArray>
+         <type>mixed</type>
+         <info>square, thumb, 2small, xsmall, small, medium, large, xlarge, xxlarge</info>
+      </item>
+      <item>
+         <name>ids</name>
+         <optional>1</optional>
+         <acceptArray>1</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>max_urls</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <defaultValue>200</defaultValue>
+      </item>
+      <item>
+         <name>prev_page</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+      </item>
+      <item>
+         <name>f_min_rate</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>float</type>
+      </item>
+      <item>
+         <name>f_max_rate</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>float</type>
+      </item>
+      <item>
+         <name>f_min_hit</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+      </item>
+      <item>
+         <name>f_max_hit</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+      </item>
+      <item>
+         <name>f_min_ratio</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>float positive</type>
+      </item>
+      <item>
+         <name>f_max_ratio</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>float positive</type>
+      </item>
+      <item>
+         <name>f_max_level</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+      </item>
+      <item>
+         <name>f_min_date_available</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>f_max_date_available</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>f_min_date_created</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>f_max_date_created</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

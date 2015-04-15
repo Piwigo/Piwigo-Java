@@ -1,0 +1,9 @@
+<config currentGalleryConfigId="0">
+   <galleryConfigs class="java.util.ArrayList">
+      <galleryConfig>
+         <url>http://mygallery.piwigo.com</url>
+         <username>username</username>
+         <password>Base64password==</password>
+      </galleryConfig>
+   </galleryConfigs>
+</config>

@@ -1,0 +1,12 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>reflection.getMethodDetails</name>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>methodName</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options/>
+</reflectionGetMethodDetailsResponse>

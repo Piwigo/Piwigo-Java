@@ -1,0 +1,57 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.images.addSimple</name>
+   <description>Add an image.
+&lt;br&gt;Use the &lt;b&gt;$_FILES[image]&lt;/b&gt; field for uploading file.
+&lt;br&gt;Set the form encoding to &quot;form-data&quot;.
+&lt;br&gt;You can update an existing photo if you define an existing image_id.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>category</name>
+         <optional>1</optional>
+         <acceptArray>1</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>name</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>author</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>comment</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>level</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <defaultValue>0</defaultValue>
+         <maxValue>8</maxValue>
+      </item>
+      <item>
+         <name>tags</name>
+         <optional>1</optional>
+         <acceptArray>1</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>image_id</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+      <post_only>1</post_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

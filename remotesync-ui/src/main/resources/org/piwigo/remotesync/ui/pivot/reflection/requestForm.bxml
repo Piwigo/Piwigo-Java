@@ -1,0 +1,70 @@
+<!--
+  Copyright (c) 2014 Matthieu Helleboid.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      Matthieu Helleboid - initial API and implementation
+-->
+<remotesync:RequestForm xmlns:bxml="http://pivot.apache.org/bxml"
+	xmlns:remotesync="org.piwigo.remotesync.ui.pivot.reflection" xmlns="org.apache.pivot.wtk">
+	<left>
+		<TablePane>
+			<columns>
+				<TablePane.Column width="1*" />
+			</columns>
+
+			<TablePane.Row height="-1">
+				<BoxPane>
+					<Label text="Method name :" />
+					<Label bxml:id="methodNameLabel" text="methodName" />
+				</BoxPane>
+			</TablePane.Row>
+
+			<TablePane.Row height="-1">
+				<BoxPane>
+					<Label text="Description :" />
+					<Label bxml:id="descriptionLabel" text="description" styles="{wrapText:true}" />
+				</BoxPane>
+			</TablePane.Row>
+
+			<TablePane.Row height="1*">
+				<ScrollPane horizontalScrollBarPolicy="fill_to_capacity">
+					<Form bxml:id="form">
+						<Form.Section bxml:id="mandatorySection" heading="Mandatory parameters" />
+						<Form.Section bxml:id="optionalSection" heading="Optional parameters" />
+					</Form>
+				</ScrollPane>
+			</TablePane.Row>
+
+			<TablePane.Row height="-1">
+				<Separator />
+			</TablePane.Row>
+
+			<TablePane.Row height="-1">
+				<TablePane>
+					<columns>
+						<TablePane.Column width="1*" />
+						<TablePane.Column width="-1" />
+					</columns>
+
+					<TablePane.Row>
+						<BoxPane styles="{verticalAlignment:'center'}">
+							<Label bxml:id="errorLabel" styles="{color:22}" />
+						</BoxPane>
+						<BoxPane styles="{horizontalAlignment:'right', verticalAlignment:'center'}">
+							<PushButton bxml:id="submitButton" buttonData="Submit" styles="{minimumAspectRatio:3}" />
+						</BoxPane>
+					</TablePane.Row>
+				</TablePane>
+			</TablePane.Row>
+		</TablePane>
+	</left>
+	<bottom>
+		<ScrollPane horizontalScrollBarPolicy="fill_to_capacity">
+			<TextArea bxml:id="resultTextArea" />
+		</ScrollPane>
+	</bottom>
+</remotesync:RequestForm>

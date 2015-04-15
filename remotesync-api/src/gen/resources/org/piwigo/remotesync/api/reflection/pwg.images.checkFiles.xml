@@ -1,0 +1,34 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.images.checkFiles</name>
+   <description>Checks if you have updated version of your files for a given photo, the answer can be &quot;missing&quot;, &quot;equals&quot; or &quot;differs&quot;.
+&lt;br&gt;Don&apos;t use &quot;thumbnail_sum&quot; and &quot;high_sum&quot;, these parameters are here for backward compatibility.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>image_id</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>file_sum</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>thumbnail_sum</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>high_sum</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

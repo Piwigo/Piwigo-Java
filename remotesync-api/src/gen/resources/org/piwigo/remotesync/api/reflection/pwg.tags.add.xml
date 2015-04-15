@@ -1,0 +1,15 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.tags.add</name>
+   <description>Adds a new tag.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>name</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

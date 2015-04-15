@@ -1,0 +1,34 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.images.addComment</name>
+   <description>Adds a comment to an image.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>image_id</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>author</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <defaultValue>guest</defaultValue>
+      </item>
+      <item>
+         <name>content</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>key</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <post_only>1</post_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

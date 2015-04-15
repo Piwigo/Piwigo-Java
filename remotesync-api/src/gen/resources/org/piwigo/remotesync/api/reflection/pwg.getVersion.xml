@@ -1,0 +1,6 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.getVersion</name>
+   <description>Returns the Piwigo version.</description>
+   <params class="java.util.ArrayList"/>
+   <options/>
+</reflectionGetMethodDetailsResponse>

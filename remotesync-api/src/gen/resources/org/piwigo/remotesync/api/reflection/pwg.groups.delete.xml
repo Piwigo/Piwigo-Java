@@ -1,0 +1,22 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.groups.delete</name>
+   <description>Deletes a or more groups. Users and photos are not deleted.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>group_id</name>
+         <optional>0</optional>
+         <acceptArray>1</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>pwg_token</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+      <post_only>1</post_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

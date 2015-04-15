@@ -1,0 +1,48 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.categories.add</name>
+   <description>Adds an album.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>name</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>parent</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+      </item>
+      <item>
+         <name>comment</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>visible</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>bool</type>
+         <defaultValue>1</defaultValue>
+      </item>
+      <item>
+         <name>status</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <info>public, private</info>
+      </item>
+      <item>
+         <name>commentable</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>bool</type>
+         <defaultValue>1</defaultValue>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

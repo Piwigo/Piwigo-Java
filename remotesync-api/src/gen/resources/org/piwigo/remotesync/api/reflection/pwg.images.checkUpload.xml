@@ -1,0 +1,8 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.images.checkUpload</name>
+   <description>Checks if Piwigo is ready for upload.</description>
+   <params class="java.util.ArrayList"/>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

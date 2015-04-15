@@ -1,0 +1,18 @@
+<!--
+  Copyright (c) 2014 Matthieu Helleboid.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      Matthieu Helleboid - initial API and implementation
+-->
+<remotesync:RequestFormInput xmlns:bxml="http://pivot.apache.org/bxml"
+	xmlns:remotesync="org.piwigo.remotesync.ui.pivot.reflection" xmlns="org.apache.pivot.wtk">
+	<Checkbox bxml:id="sendCheckBox" tooltipText="send" preferredWidth="20" />
+	<Label bxml:id="parameterNameLabel" text="parameterName" preferredWidth="120" />
+	<TextInput bxml:id="input" preferredWidth="80" />
+	<PushButton bxml:id="addInputButton" buttonData="+" preferredWidth="20" />
+	<PushButton bxml:id="removeInputButton" buttonData="-" preferredWidth="20" />
+</remotesync:RequestFormInput>

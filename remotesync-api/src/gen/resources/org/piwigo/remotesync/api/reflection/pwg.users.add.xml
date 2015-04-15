@@ -1,0 +1,47 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.users.add</name>
+   <description>Registers a new user.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>username</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>password</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>password_confirm</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>email</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>send_password_by_mail</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>bool</type>
+         <defaultValue>0</defaultValue>
+      </item>
+      <item>
+         <name>pwg_token</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+      <post_only>1</post_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

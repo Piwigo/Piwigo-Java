@@ -1,0 +1,8 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.extensions.checkUpdates</name>
+   <description>Checks if piwigo or extensions are up to date.</description>
+   <params class="java.util.ArrayList"/>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

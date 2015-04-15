@@ -1,0 +1,42 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.categories.getList</name>
+   <description>Returns a list of categories.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>cat_id</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <info>Parent category. &quot;0&quot; or empty for root.</info>
+      </item>
+      <item>
+         <name>recursive</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>bool</type>
+         <defaultValue>0</defaultValue>
+      </item>
+      <item>
+         <name>public</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>bool</type>
+         <defaultValue>0</defaultValue>
+      </item>
+      <item>
+         <name>tree_output</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>bool</type>
+         <defaultValue>0</defaultValue>
+      </item>
+      <item>
+         <name>fullname</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>bool</type>
+         <defaultValue>0</defaultValue>
+      </item>
+   </params>
+   <options/>
+</reflectionGetMethodDetailsResponse>

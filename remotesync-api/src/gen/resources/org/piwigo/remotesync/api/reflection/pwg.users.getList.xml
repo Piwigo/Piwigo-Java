@@ -1,0 +1,81 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.users.getList</name>
+   <description>Retrieves a list of all the users.&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;display&lt;/b&gt; controls which data are returned, possible values are:&lt;br&gt;
+all, basics, none,&lt;br&gt;
+username, email, status, level, groups,&lt;br&gt;
+language, theme, nb_image_page, recent_period, expand, show_nb_comments, show_nb_hits,&lt;br&gt;
+enabled_high, registration_date, registration_date_string, registration_date_since, last_visit, last_visit_string, last_visit_since&lt;br&gt;
+&lt;b&gt;basics&lt;/b&gt; stands for &quot;username,email,status,level,groups&quot;</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>user_id</name>
+         <optional>1</optional>
+         <acceptArray>1</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>username</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <info>Use &quot;%&quot; as wildcard.</info>
+      </item>
+      <item>
+         <name>status</name>
+         <optional>1</optional>
+         <acceptArray>1</acceptArray>
+         <type>mixed</type>
+         <info>guest,generic,normal,admin,webmaster</info>
+      </item>
+      <item>
+         <name>min_level</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <defaultValue>0</defaultValue>
+         <maxValue>8</maxValue>
+      </item>
+      <item>
+         <name>group_id</name>
+         <optional>1</optional>
+         <acceptArray>1</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>per_page</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <defaultValue>100</defaultValue>
+         <maxValue>1000</maxValue>
+      </item>
+      <item>
+         <name>page</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <defaultValue>0</defaultValue>
+      </item>
+      <item>
+         <name>order</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <info>id, username, level, email</info>
+         <defaultValue>id</defaultValue>
+      </item>
+      <item>
+         <name>display</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <info>Comma saparated list (see method description)</info>
+         <defaultValue>basics</defaultValue>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

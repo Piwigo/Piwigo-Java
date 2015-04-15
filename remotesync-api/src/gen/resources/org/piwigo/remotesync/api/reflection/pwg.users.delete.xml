@@ -1,0 +1,22 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.users.delete</name>
+   <description>Deletes on or more users. Photos owned by this user are not deleted.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>user_id</name>
+         <optional>0</optional>
+         <acceptArray>1</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>pwg_token</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+      <post_only>1</post_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

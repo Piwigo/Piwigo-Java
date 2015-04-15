@@ -1,0 +1,96 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Matthieu Helleboid.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v2.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * Contributors:
+ *     Matthieu Helleboid - initial API and implementation
+ ******************************************************************************/
+package org.piwigo.remotesync.api.request;
+
+import org.piwigo.remotesync.api.request.AbstractRequest;
+import org.piwigo.remotesync.api.response.${responseName};
+
+/**
+${description}
+**/
+${generatedComment}
+public class ${requestName} extends AbstractRequest<${responseName}> {
+
+${if hasMandatoryParameters}
+	protected ${requestName}() {}
+${end}
+
+	public ${requestName}(${foreach mandatoryParameters parameter , }${parameter.type.javaType} ${parameter.name}${end}) {
+${foreach mandatoryParameters parameter}
+		set${parameter.camelCaseName}(${parameter.name});
+${end}
+	}
+
+${if hasMandatoryArrayParameters}
+	public ${requestName}(${foreach mandatoryParameters parameter , }${if parameter.acceptArray}${parameter.type.javaType}... ${parameter.name}${else}${parameter.type.javaType} ${parameter.name}${end}${end}) {
+${foreach mandatoryParameters parameter}
+		set${parameter.camelCaseName}(${if parameter.acceptArray}java.util.Arrays.asList(${parameter.name})${else}${parameter.name}${end});
+${end}
+	}
+
+	public ${requestName}(${foreach mandatoryParameters parameter , }${if parameter.acceptArray}java.util.List<${parameter.type.javaType}> ${parameter.name}List${else}${parameter.type.javaType} ${parameter.name}${end}${end}) {
+${foreach mandatoryParameters parameter}
+		set${parameter.camelCaseName}(${if parameter.acceptArray}${parameter.name}List${else}${parameter.name}${end});
+${end}
+	}
+${end}
+
+${foreach parameters parameter}
+${if parameter.info}	//info : ${parameter.info}
+${end}${if parameter.defaultValue}	//defaultValue : ${parameter.defaultValue}
+${end}${if parameter.maxValue}	//maxValue : ${parameter.maxValue}
+${end} 	${if parameter.optional}public${else}protected${end} ${requestName} set${parameter.camelCaseName}(${parameter.type.javaType} ${parameter.name}) {
+		addParameterValue("${parameter.name}", org.piwigo.remotesync.api.type.Type.${parameter.type.name}, ${parameter.maxValue(null)}, ${parameter.name});
+		return this;
+	}	
+
+${if parameter.acceptArray}
+	${if parameter.optional}public${else}protected${end} ${requestName} set${parameter.camelCaseName}(${parameter.type.javaType}... ${parameter.name}) {
+		addParameterValueList("${parameter.name}", org.piwigo.remotesync.api.type.Type.${parameter.type.name}, ${parameter.maxValue(null)}, java.util.Arrays.asList(${parameter.name}));
+		return this;
+	}
+
+	${if parameter.optional}public${else}protected${end} ${requestName} set${parameter.camelCaseName}(java.util.List<${parameter.type.javaType}> ${parameter.name}List) {
+		addParameterValueList("${parameter.name}", org.piwigo.remotesync.api.type.Type.${parameter.type.name}, ${parameter.maxValue(null)}, ${parameter.name}List);
+		return this;
+	}
+${end}
+${end}
+
+${foreach parameters parameter}
+${if parameter.type.values}
+	public enum ${parameter.type.javaType} {
+		${foreach parameter.type.values value ,}
+		${value}${end}
+	}
+${end}
+${end}
+
+	public boolean isNeedPwgToken() {
+		return ${if needPwgToken}true${else}false${end};
+	}
+
+	public boolean isAdminOnly() {
+		return ${if options.admin_only}true${else}false${end};
+	};
+
+	public boolean isPostOnly() {
+		return ${if options.post_only}true${else}false${end};
+	};
+
+	public String getWSMethodName() {
+		return "${methodName}";
+	}
+	
+	public Class<${responseName}> getReturnType() {
+		return ${responseName}.class;
+	}
+}

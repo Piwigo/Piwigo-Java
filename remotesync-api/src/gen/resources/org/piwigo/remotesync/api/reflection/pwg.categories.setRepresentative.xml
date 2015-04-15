@@ -1,0 +1,22 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.categories.setRepresentative</name>
+   <description>Sets the representative photo for an album. The photo doesn&apos;t have to belong to the album.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>category_id</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>image_id</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+      <post_only>1</post_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

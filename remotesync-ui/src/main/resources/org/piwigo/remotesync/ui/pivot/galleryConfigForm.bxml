@@ -1,0 +1,97 @@
+<!--
+  Copyright (c) 2014 Matthieu Helleboid.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v2.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      Matthieu Helleboid - initial API and implementation
+-->
+<remotesync:GalleryConfigForm xmlns:bxml="http://pivot.apache.org/bxml"
+	xmlns:remotesync="org.piwigo.remotesync.ui.pivot" xmlns:validation="org.apache.pivot.wtk.validation"
+	xmlns="org.apache.pivot.wtk">
+	<TablePane styles="{padding:6}">
+		<columns>
+			<TablePane.Column width="1*"/>
+		</columns>
+		<TablePane.Row height="1*">	
+			<Form bxml:id="form">
+				<Form.Section heading="Gallery">
+					<TextInput bxml:id="urlTextInput" textKey="url" textSize="40" Form.label="Remote Url" prompt="http://mygallery.piwigo.com">
+						<validator>
+							<validation:RegexTextValidator>
+								<pattern>https?://.+</pattern>
+							</validation:RegexTextValidator>
+						</validator>
+					</TextInput>
+					<TextInput bxml:id="loginTextInput" textKey="username" Form.label="Login" prompt="myusername">
+						<validator>
+							<validation:NotEmptyTextValidator/>
+						</validator>
+					</TextInput>
+					<TextInput bxml:id="passwordTextInput" textKey="password" Form.label="Password" prompt="mypassword" password="true">
+						<validator>
+							<validation:NotEmptyTextValidator/>
+						</validator>
+					</TextInput>
+				</Form.Section>
+				<Form.Section heading="Local">
+					<BoxPane Form.label="Directory" >
+						<TextInput bxml:id="directoryTextInput" textKey="directory" textSize="40" prompt="D:\mypictures"/>
+						<PushButton bxml:id="directoryButton" buttonData="..."/>
+					</BoxPane>
+				</Form.Section>
+				<Form.Section heading="Communication">
+					<BoxPane Form.label="Upload Chunck size">
+						<Slider bxml:id="chunkSizeSlider" range="{start:100, end:2000}" value="500"/>
+						<Label bxml:id="chunkSizeLabel"/> 
+					</BoxPane>
+					<Checkbox bxml:id="proxyCheckbox" Form.label="Use proxy"/>
+					<TextInput bxml:id="proxyUrlTextInput" textKey="proxyUrl" textSize="40" Form.label="Url" prompt="http://myproxy.com">
+						<validator>
+							<validation:RegexTextValidator>
+								<pattern>https?://.+</pattern>
+							</validation:RegexTextValidator>
+						</validator>
+					</TextInput>	
+					<TextInput bxml:id="proxyPortTextInput" textKey="proxyPort" Form.label="Port" prompt="8081">
+						<validator>
+							<validation:IntValidator/>
+						</validator>
+					</TextInput>	
+					<TextInput bxml:id="proxyUsernameTextInput" textKey="proxyUsername" Form.label="Login" prompt="login">
+						<validator>
+							<validation:NotEmptyTextValidator/>
+						</validator>			
+					</TextInput>
+					<TextInput bxml:id="proxyPasswordTextInput" textKey="proxyPassword" Form.label="Password" prompt="password">
+						<validator>
+							<validation:NotEmptyTextValidator/>
+						</validator>			
+					</TextInput>
+				</Form.Section>
+			</Form>
+		</TablePane.Row>
+		<TablePane.Row height="-1">
+			<Separator/>
+		</TablePane.Row>
+		<TablePane.Row height="-1">
+			<TablePane>
+				<columns>
+					<TablePane.Column width="1*"/>
+					<TablePane.Column width="-1"/>
+				</columns>
+				<TablePane.Row>
+					<BoxPane styles="{verticalAlignment:'center'}">
+						<Label bxml:id="errorLabel" styles="{color:22}"/>
+					</BoxPane>
+					<BoxPane styles="{horizontalAlignment:'right', verticalAlignment:'center'}">
+						<PushButton bxml:id="saveButton" buttonData="Save" />
+						<PushButton bxml:id="cancelButton" buttonData="Cancel" />
+					</BoxPane>
+				</TablePane.Row>
+			</TablePane>
+		</TablePane.Row>
+	</TablePane>
+</remotesync:GalleryConfigForm>

@@ -1,0 +1,19 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.images.rate</name>
+   <description>Rates an image.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>image_id</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+      <item>
+         <name>rate</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>float</type>
+      </item>
+   </params>
+   <options/>
+</reflectionGetMethodDetailsResponse>

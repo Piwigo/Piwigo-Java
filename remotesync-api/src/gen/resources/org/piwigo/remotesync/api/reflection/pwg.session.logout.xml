@@ -1,0 +1,6 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.session.logout</name>
+   <description>Ends the current session.</description>
+   <params class="java.util.ArrayList"/>
+   <options/>
+</reflectionGetMethodDetailsResponse>

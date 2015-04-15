@@ -1,0 +1,14 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.tags.getList</name>
+   <description>Retrieves a list of available tags.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>sort_by_counter</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>bool</type>
+         <defaultValue>0</defaultValue>
+      </item>
+   </params>
+   <options/>
+</reflectionGetMethodDetailsResponse>

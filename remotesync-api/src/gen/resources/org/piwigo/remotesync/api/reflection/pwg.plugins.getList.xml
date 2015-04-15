@@ -1,0 +1,8 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.plugins.getList</name>
+   <description>Gets the list of plugins with id, name, version, state and description.</description>
+   <params class="java.util.ArrayList"/>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

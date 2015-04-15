@@ -1,0 +1,21 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.session.login</name>
+   <description>Tries to login the user.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>username</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>password</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+   </params>
+   <options>
+      <post_only>1</post_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

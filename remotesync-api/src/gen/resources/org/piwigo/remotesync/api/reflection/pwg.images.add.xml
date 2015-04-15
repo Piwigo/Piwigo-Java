@@ -1,0 +1,94 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>pwg.images.add</name>
+   <description>Add an image.
+&lt;br&gt;pwg.images.addChunk must have been called before (maybe several times).
+&lt;br&gt;Don&apos;t use &quot;thumbnail_sum&quot; and &quot;high_sum&quot;, these parameters are here for backward compatibility.</description>
+   <params class="java.util.ArrayList">
+      <item>
+         <name>thumbnail_sum</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>high_sum</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>original_sum</name>
+         <optional>0</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>original_filename</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>name</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>author</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>date_creation</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>comment</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+      </item>
+      <item>
+         <name>categories</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <info>String list &quot;category_id[,rank];category_id[,rank]&quot;.&lt;br&gt;The rank is optional and is equivalent to &quot;auto&quot; if not given.</info>
+      </item>
+      <item>
+         <name>tag_ids</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>mixed</type>
+         <info>Comma separated ids</info>
+      </item>
+      <item>
+         <name>level</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive</type>
+         <defaultValue>0</defaultValue>
+         <maxValue>8</maxValue>
+      </item>
+      <item>
+         <name>check_uniqueness</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>bool</type>
+         <defaultValue>1</defaultValue>
+      </item>
+      <item>
+         <name>image_id</name>
+         <optional>1</optional>
+         <acceptArray>0</acceptArray>
+         <type>int positive notnull</type>
+      </item>
+   </params>
+   <options>
+      <admin_only>1</admin_only>
+   </options>
+</reflectionGetMethodDetailsResponse>

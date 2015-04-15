@@ -1,0 +1,5 @@
+<reflectionGetMethodDetailsResponse stat="ok">
+   <name>reflection.getMethodList</name>
+   <params class="java.util.ArrayList"/>
+   <options/>
+</reflectionGetMethodDetailsResponse>
