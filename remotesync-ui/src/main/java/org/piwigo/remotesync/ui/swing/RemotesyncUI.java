@@ -13,6 +13,8 @@ package org.piwigo.remotesync.ui.swing;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.JButton;
@@ -25,8 +27,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
-import org.piwigo.remotesync.api.Sync;
+import org.piwigo.remotesync.api.conf.ConfigUtil;
 import org.piwigo.remotesync.api.conf.GalleryConfig;
+import org.piwigo.remotesync.api.sync.SyncJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,20 +52,29 @@ public class RemotesyncUI {
 	private JTextArea textArea;
 	private JButton proxyButton;
 
-	private GalleryConfig config;
+	private GalleryConfig config = ConfigUtil.INSTANCE.getUserConfig().getCurrentGalleryConfig();
 	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void run(final GalleryConfig config) {
+	public static void run() {
 		// logger.debug("RemotesyncUI loaded");
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					// logger.debug("Create RemotesyncUI window");
-					RemotesyncUI window = new RemotesyncUI(config);
+					final RemotesyncUI window = new RemotesyncUI();
 					window.configureLogger();
+					
+					window.frame.addWindowListener(new WindowAdapter(){
+			            public void windowClosing(WindowEvent e){
+			            	window.save();
+			            	ConfigUtil.INSTANCE.saveUserConfig();
+			            }
+			        });
+					
+					window.load();
 					window.frame.setVisible(true);
 					logger.debug("RemotesyncUI window created");
 				} catch (Exception e) {
@@ -98,8 +110,7 @@ public class RemotesyncUI {
 	/**
 	 * Create the application.
 	 */
-	private RemotesyncUI(GalleryConfig config) {
-		this.config = config;
+	private RemotesyncUI() {
 		initialize();
 	}
 
@@ -121,7 +132,6 @@ public class RemotesyncUI {
 
 		urlText = new JTextField();
 		urlText.setBounds(149, 26, 558, 36);
-		urlText.setText(config.getUrl());
 		frame.getContentPane().add(urlText);
 		urlText.setColumns(10);
 
@@ -131,7 +141,6 @@ public class RemotesyncUI {
 
 		usernameText = new JTextField();
 		usernameText.setBounds(149, 75, 558, 36);
-		usernameText.setText(config.getUsername());
 		frame.getContentPane().add(usernameText);
 		usernameText.setColumns(10);
 
@@ -141,7 +150,6 @@ public class RemotesyncUI {
 
 		passwordText = new JPasswordField();
 		passwordText.setBounds(149, 123, 558, 36);
-		passwordText.setText(config.getPassword());
 		frame.getContentPane().add(passwordText);
 		passwordText.setColumns(10);
 
@@ -156,7 +164,6 @@ public class RemotesyncUI {
 
 		directoryText = new JTextField();
 		directoryText.setBounds(149, 171, 558, 36);
-		directoryText.setText(config.getDirectory());
 		frame.getContentPane().add(directoryText);
 		directoryText.setColumns(10);
 
@@ -211,13 +218,24 @@ public class RemotesyncUI {
 	protected void sync() {
 		logger.debug("RemotesyncUI sync button pressed");
 
+		save();
+
+		new SyncJob().executeInThread();
+
+		logger.debug("RemotesyncUI sync button action finished");
+	}
+	
+	protected void load() {
+		urlText.setText(config.getUrl());
+		usernameText.setText(config.getUsername());
+		passwordText.setText(config.getPassword());
+		directoryText.setText(config.getDirectory());
+	}
+
+	protected void save() {
 		config.setUrl(urlText.getText());
 		config.setUsername(usernameText.getText());
 		config.setPassword(passwordText.getText());
 		config.setDirectory(directoryText.getText());
-
-		new Sync(config).syncInThread();
-
-		logger.debug("RemotesyncUI sync button action finished");
 	}
 }

@@ -8,26 +8,8 @@
  * Contributors:
  *     Matthieu Helleboid - initial API and implementation
  ******************************************************************************/
-package org.piwigo.remotesync.api;
+package org.piwigo.remotesync.ui.pivot;
 
-import org.piwigo.remotesync.api.sync.SyncJob;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class Main extends AbstractMain {
-	static final Logger logger = LoggerFactory.getLogger(Main.class);
-
-	public static void main(String[] args) {
-		new Main().run(args);
-	}
-	
-	protected void start() {
-		logger.debug("will start batch Remotesync");
-		new SyncJob().execute();
-	}
-
-//	// TODO implement dry run
-//	@Option(name = "-dryrun", usage = "do nothing")
-//	public boolean dryrun = false;
+public class SyncForm {
 
 }

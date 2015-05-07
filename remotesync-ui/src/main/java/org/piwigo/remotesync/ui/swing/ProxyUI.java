@@ -114,9 +114,9 @@ public class ProxyUI extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				super.windowClosing(e);
-				config.setUsesProxy(chckbxUseProxy.isSelected());
+				config.setUsesProxy(Boolean.toString(chckbxUseProxy.isSelected()));
 				config.setProxyUrl(proxyUrltextField.getText());
-				config.setProxyPort(Integer.parseInt(proxyPorttextField.getText()));
+				config.setProxyPort(proxyPorttextField.getText());
 				config.setProxyUsername(proxyLogintextField.getText());
 				config.setProxyPassword(proxyPasswordtextField.getText());
 			}
@@ -124,7 +124,7 @@ public class ProxyUI extends JFrame {
 			@Override
 			public void windowOpened(WindowEvent e) {
 				super.windowOpened(e);
-				chckbxUseProxy.setSelected(config.getUsesProxy());
+				chckbxUseProxy.setSelected(config.getUsesProxyBoolean());
 				proxyUrltextField.setText(config.getProxyUrl());
 				proxyPorttextField.setText(config.getProxyPort() + "");
 				proxyLogintextField.setText(config.getProxyUsername());

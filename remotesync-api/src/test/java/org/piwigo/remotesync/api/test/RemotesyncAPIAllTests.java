@@ -25,6 +25,7 @@ public class RemotesyncAPIAllTests extends TestCase {
 		TestSuite suite = new TestSuite(RemotesyncAPIAllTests.class.getName());
 		// $JUnit-BEGIN$
 		suite.addTestSuite(FileUtilTest.class);
+		suite.addTestSuite(SyncTest.class);
 		suite.addTestSuite(APITest.class);
 		suite.addTestSuite(ImagesTest.class);
 		suite.addTestSuite(RequestsTest.class);

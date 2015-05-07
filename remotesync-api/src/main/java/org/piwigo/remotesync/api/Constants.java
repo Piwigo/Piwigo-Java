@@ -10,14 +10,35 @@
  ******************************************************************************/
 package org.piwigo.remotesync.api;
 
-public interface Constants {
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.AbstractFileFilter;
+import org.apache.commons.io.filefilter.IOFileFilter;
+
+public class Constants {
+	
+	//TODO should be moved to API?
+
 	// TODO ask pierrick :
 	//  * isAdmin should be isWebmaster || isAdmin
 	public enum UserType {
 		webmaster, admin, guest, generic, normal
 	}
+	
+	private static List<String> IMAGE_EXTENSIONS = Arrays.asList(new String[] {"jpg", "jpeg", "png", "gif", "tif", "tiff"});
+	
+	public static IOFileFilter IMAGE_EXTENSIONS_FILTER = new ExtensionFileFilter();
+	
+	private static final class ExtensionFileFilter extends AbstractFileFilter {
 
-	public enum ImageExtension {
-		jpg, jpeg, png, gif, tif, tiff;
+		@Override
+		public boolean accept(File file) {
+			return IMAGE_EXTENSIONS.contains(FilenameUtils.getExtension(file.getName()).toLowerCase());
+		}
+
 	}
+
 }

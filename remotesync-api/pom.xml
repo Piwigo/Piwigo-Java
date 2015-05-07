@@ -136,7 +136,7 @@
 	<parent>
 		<groupId>piwigo</groupId>
 		<artifactId>remotesync</artifactId>
-		<version>0.0.4-SNAPSHOT</version>
+		<version>0.0.5</version>
 		<relativePath>../remotesync</relativePath>
 	</parent>
 </project>

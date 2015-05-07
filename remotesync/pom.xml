@@ -14,7 +14,7 @@
 	<groupId>piwigo</groupId>
 	<artifactId>remotesync</artifactId>
 	<name>Piwigo Remote Sync</name>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>../remotesync-api</module>

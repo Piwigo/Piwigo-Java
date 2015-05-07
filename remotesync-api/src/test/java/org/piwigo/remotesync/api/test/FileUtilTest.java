@@ -58,5 +58,6 @@ public class FileUtilTest extends AbstractTestCase {
 	
 	public void testIsImage() throws URISyntaxException  {
 		assertTrue(FileUtil.isImage(getPictureFile()));
+		assertFalse(FileUtil.isImage(getPiwigoImportTreeFile()));
 	}
 }

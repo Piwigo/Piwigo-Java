@@ -34,7 +34,8 @@ public class Image {
 	@Attribute(name = "file")
 	public String filename;
 
-	@Attribute(name = "date_creation")
+	//FIXME investigate why some images don't have a creation date
+	@Attribute(required = false, name = "date_creation")
 	public Date creationDate;
 
 	@Attribute(name = "date_available")

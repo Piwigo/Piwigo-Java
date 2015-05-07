@@ -22,6 +22,7 @@ import org.piwigo.remotesync.api.conf.Config;
 import org.piwigo.remotesync.api.conf.ConfigUtil;
 import org.piwigo.remotesync.api.conf.GalleryConfig;
 import org.piwigo.remotesync.api.exception.ClientServerException;
+import org.piwigo.remotesync.api.sync.SyncCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,6 @@ public abstract class AbstractTestCase extends TestCase {
 		if (client == null) {
 			GalleryConfig galleryConfig = getTestConfig().getCurrentGalleryConfig();
 			client = new AuthenticatedWSClient(galleryConfig.getUrl()).login(galleryConfig.getUsername(), galleryConfig.getPassword());
-			
 		}
 		return client;
 	}
@@ -53,10 +53,15 @@ public abstract class AbstractTestCase extends TestCase {
 			logger.error(exception.getMessage(), exception);
 			throw exception;
 		}
-		return ConfigUtil.INSTANCE.loadConfig(new File(resource.getPath()));
+		ConfigUtil.INSTANCE.loadConfig(new File(resource.getPath()));
+		return ConfigUtil.INSTANCE.getUserConfig();
 	}
 
 	protected File getPictureFile() throws URISyntaxException {
 		return new File(AbstractTestCase.class.getResource("picture.jpg").toURI());
+	}
+	
+	protected File getPiwigoImportTreeFile() throws URISyntaxException {
+		return new File(AbstractTestCase.class.getResource(SyncCache.LEGACY_CACHE_FILE_NAME).toURI());
 	}
 }

@@ -38,33 +38,32 @@ public class ConfigUtil {
 
 	public Config getUserConfig() {
 		if (userConfig == null)
-			userConfig = loadUserConfig();
+			loadUserConfig();
 		return userConfig;
 	}
 
-	public Config loadUserConfig() {
-		userConfig = loadConfig(getUserConfigFile());
-		return userConfig;
+	public void loadUserConfig() {
+		loadConfig(getUserConfigFile());
 	}
 
 	public void saveUserConfig() {
 		saveConfig(getUserConfigFile(), userConfig);
 	}
 
-	public Config loadConfig(File configFile) {
+	public void loadConfig(File configFile) {
 		if (configFile.exists()) {
 			logger.debug("found userConfig file " + configFile.getAbsolutePath());
 			try {
 				userConfig = PersisterFactory.createPersister().read(Config.class, configFile);
 				logger.debug("configuration loaded");
-				return userConfig;
+				return;
 			} catch (Exception e) {
 				logger.error("unable to read userConfig file", e);
 			}
-		} else
+		}
 			logger.debug("no userConfig file found");
 
-		return new Config();
+		userConfig = new Config();
 	}
 
 	public void saveConfig(File configFile, Config config) {

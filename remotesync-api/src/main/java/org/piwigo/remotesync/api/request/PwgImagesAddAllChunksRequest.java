@@ -23,7 +23,7 @@ public class PwgImagesAddAllChunksRequest extends ComposedRequest<BasicResponse>
 
 	private File file;
 	//TODO store it
-	private final int chunkSize = 1024 * ConfigUtil.INSTANCE.getUserConfig().getCurrentGalleryConfig().getChunkSize();
+	private final int chunkSize = 1024 * ConfigUtil.INSTANCE.getUserConfig().getCurrentGalleryConfig().getChunkSizeInteger();
 
 	public PwgImagesAddAllChunksRequest(File file) throws ClientException {
 		this.file = file;

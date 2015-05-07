@@ -59,7 +59,7 @@ public class GalleryConfigValidator {
 	public void validate(GalleryConfig galleryConfig) throws IllegalArgumentException, IllegalAccessException, GalleryValidationException {
 		for (Field field : GalleryConfig.class.getDeclaredFields()) {
 			String value = (String) field.get(galleryConfig);
-			Boolean usesProxy = galleryConfig.getUsesProxy();
+			Boolean usesProxy = galleryConfig.getUsesProxyBoolean();
 			
 			validate(field, value, usesProxy);
 		}

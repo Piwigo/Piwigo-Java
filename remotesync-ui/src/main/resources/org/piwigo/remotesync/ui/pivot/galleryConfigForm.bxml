@@ -17,6 +17,9 @@
 		</columns>
 		<TablePane.Row height="1*">	
 			<Form bxml:id="form">
+				<Form.Section>
+					<ListButton bxml:id="configListButton"/>
+				</Form.Section>
 				<Form.Section heading="Gallery">
 					<TextInput bxml:id="urlTextInput" textKey="url" textSize="40" Form.label="Remote Url" prompt="http://mygallery.piwigo.com">
 						<validator>
@@ -87,8 +90,7 @@
 						<Label bxml:id="errorLabel" styles="{color:22}"/>
 					</BoxPane>
 					<BoxPane styles="{horizontalAlignment:'right', verticalAlignment:'center'}">
-						<PushButton bxml:id="saveButton" buttonData="Save" />
-						<PushButton bxml:id="cancelButton" buttonData="Cancel" />
+						<PushButton bxml:id="reloadButton" buttonData="Reload from disk" />
 					</BoxPane>
 				</TablePane.Row>
 			</TablePane>

@@ -10,24 +10,44 @@
  ******************************************************************************/
 package org.piwigo.remotesync.api;
 
-import org.piwigo.remotesync.api.sync.SyncJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Main extends AbstractMain {
-	static final Logger logger = LoggerFactory.getLogger(Main.class);
+public abstract class Job {
 
-	public static void main(String[] args) {
-		new Main().run(args);
-	}
+	private static final Logger logger = LoggerFactory.getLogger(Job.class);
+	private static boolean running;
+
+	public synchronized void execute() {
+		logger.debug("running " + running);
+		if (running) {
+			logger.info("Already running");
+			return;
+		}
+		running = true;
 	
-	protected void start() {
-		logger.debug("will start batch Remotesync");
-		new SyncJob().execute();
+		try {
+			doExecute();
+		} catch (Exception e) {
+			// FIXME
+		} finally {
+			running = false;
+		}
 	}
 
-//	// TODO implement dry run
-//	@Option(name = "-dryrun", usage = "do nothing")
-//	public boolean dryrun = false;
+	public void executeInThread() {
+		new Thread(new Runnable() {
+	
+			public void run() {
+				execute();
+			}
+		}).start();
+	}
+
+	protected abstract void doExecute();
+
+	public boolean isRunning() {
+		return running;
+	}
 
 }

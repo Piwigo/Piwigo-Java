@@ -19,7 +19,7 @@ import org.simpleframework.xml.ElementList;
 public class Config {
 
 	@ElementList
-	public List<GalleryConfig> galleryConfigs = new ArrayList<GalleryConfig>();
+	private List<GalleryConfig> galleryConfigs = new ArrayList<GalleryConfig>();
 
 	@Attribute(required = false)
 	private Integer currentGalleryConfigId;
@@ -33,7 +33,13 @@ public class Config {
 	}
 
 	public void setCurrentGalleryConfig(GalleryConfig currentGalleryConfig) {
+		if (!galleryConfigs.contains(currentGalleryConfig))
+			galleryConfigs.add(currentGalleryConfig);
 		currentGalleryConfigId = galleryConfigs.indexOf(currentGalleryConfig);
+	}
+	
+	public List<GalleryConfig> getGalleryConfigs() {
+		return galleryConfigs;
 	}
 
 }

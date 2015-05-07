@@ -13,21 +13,23 @@ package org.piwigo.remotesync.ui.pivot;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.pivot.beans.BXML;
 import org.apache.pivot.beans.Bindable;
 import org.apache.pivot.collections.Map;
+import org.apache.pivot.collections.adapter.ListAdapter;
 import org.apache.pivot.util.Resources;
 import org.apache.pivot.wtk.Border;
 import org.apache.pivot.wtk.Button;
 import org.apache.pivot.wtk.ButtonPressListener;
 import org.apache.pivot.wtk.Checkbox;
 import org.apache.pivot.wtk.Component;
+import org.apache.pivot.wtk.ComponentStateListener;
 import org.apache.pivot.wtk.FileBrowserSheet;
 import org.apache.pivot.wtk.Form;
 import org.apache.pivot.wtk.Label;
+import org.apache.pivot.wtk.ListButton;
 import org.apache.pivot.wtk.MessageType;
 import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.Sheet;
@@ -35,7 +37,10 @@ import org.apache.pivot.wtk.SheetCloseListener;
 import org.apache.pivot.wtk.Slider;
 import org.apache.pivot.wtk.SliderValueListener;
 import org.apache.pivot.wtk.TextInput;
+import org.apache.pivot.wtk.content.ListButtonDataRenderer;
+import org.apache.pivot.wtk.content.ListViewItemRenderer;
 import org.apache.pivot.wtk.validation.Validator;
+import org.piwigo.remotesync.api.conf.Config;
 import org.piwigo.remotesync.api.conf.ConfigUtil;
 import org.piwigo.remotesync.api.conf.GalleryConfig;
 import org.piwigo.remotesync.api.conf.GalleryConfigValidator;
@@ -43,6 +48,8 @@ import org.piwigo.remotesync.api.conf.GalleryConfigValidator.GalleryValidationEx
 
 public class GalleryConfigForm extends Border implements Bindable {
 	@BXML private Form form;
+	
+	@BXML private ListButton configListButton;
 
 	@BXML private TextInput urlTextInput;
 	@BXML private TextInput loginTextInput;
@@ -61,26 +68,61 @@ public class GalleryConfigForm extends Border implements Bindable {
 	@BXML private TextInput proxyPasswordTextInput;
 
 	@BXML private Label errorLabel;
-	@BXML private PushButton saveButton;
-	@BXML private PushButton cancelButton;
+	@BXML private PushButton reloadButton;
 	
 	private List<FieldAccessor<? extends Component>> accessors;
 	
 	@Override
 	public void initialize(Map<String, Object> arg0, URL arg1, Resources arg2) {
 		accessors = new ArrayList<FieldAccessor<? extends Component>>();
-		Iterator<Component> formIterator = form.iterator();
-		while (formIterator.hasNext()) {
-			Component next = formIterator.next();
-			if (next instanceof TextInput) {
-				TextInput textInput = (TextInput) next;
-				accessors.add(new TextInputFieldAccessor(textInput));
-			} else if (next.equals(chunkSizeSlider)) {
-				accessors.add(new SliderFieldAccessor(chunkSizeSlider, "chunkSize"));
-			} else if (next.equals(proxyCheckbox)) {
-				accessors.add(new CheckBoxFieldAccessor(proxyCheckbox, "usesProxy"));
+		accessors.add(new TextInputFieldAccessor(urlTextInput));
+		accessors.add(new TextInputFieldAccessor(loginTextInput));
+		accessors.add(new TextInputFieldAccessor(passwordTextInput));
+		accessors.add(new TextInputFieldAccessor(directoryTextInput));
+		accessors.add(new SliderFieldAccessor(chunkSizeSlider, "chunkSize"));
+		accessors.add(new CheckBoxFieldAccessor(proxyCheckbox, "usesProxy"));
+		accessors.add(new TextInputFieldAccessor(proxyUrlTextInput));
+		accessors.add(new TextInputFieldAccessor(proxyPortTextInput));
+		accessors.add(new TextInputFieldAccessor(proxyUsernameTextInput));
+		accessors.add(new TextInputFieldAccessor(proxyPasswordTextInput));
+		
+		ComponentStateListener componentStateListener = new ComponentStateListener() {
+			
+			@Override
+			public void focusedChanged(Component component, Component obverseComponent) {
+				saveAccessors();
 			}
+			
+			@Override
+			public void enabledChanged(Component component) {
+			}
+		};
+		
+		for (FieldAccessor<? extends Component> accessor : accessors) {
+			accessor.component.getComponentStateListeners().add(componentStateListener);
 		}
+		
+		configListButton.setItemRenderer(new ListViewItemRenderer() {
+			@Override
+			public String toString(Object item) {
+				if (item instanceof GalleryConfig) {
+					GalleryConfig galleryConfig = (GalleryConfig) item;
+					return galleryConfig.getUsername() + "@" + galleryConfig.getUrl();
+				}
+				return super.toString(item);
+			}
+		});
+		
+		configListButton.setDataRenderer(new ListButtonDataRenderer() {
+			@Override
+			public String toString(Object data) {
+				if (data instanceof GalleryConfig) {
+					GalleryConfig galleryConfig = (GalleryConfig) data;
+					return galleryConfig.getUsername() + "@" + galleryConfig.getUrl();
+				}
+				return super.toString(data);
+			}
+		});
 		
 		directoryTextInput.setValidator(new Validator() {
 			
@@ -88,22 +130,6 @@ public class GalleryConfigForm extends Border implements Bindable {
 			public boolean isValid(String text) {
 				File file = new File(text);
 				return file.exists() && file.isDirectory();
-			}
-		});
-		
-		chunkSizeSlider.getSliderValueListeners().add(new SliderValueListener() {
-			
-			@Override
-			public void valueChanged(Slider slider, int previousValue) {
-				updateChunkSizeLabel();
-			}
-		});
-		
-		proxyCheckbox.getButtonPressListeners().add(new ButtonPressListener() {
-			
-			@Override
-			public void buttonPressed(Button button) {
-				updateProxyState();
 			}
 		});
 		
@@ -135,22 +161,29 @@ public class GalleryConfigForm extends Border implements Bindable {
 			}
 		});
 		
-		saveButton.getButtonPressListeners().add(new ButtonPressListener() {
-            @Override
-            public void buttonPressed(Button button) {
-            	GalleryConfig galleryConfig = new GalleryConfig();
-            	save(galleryConfig);
-            }
-        });
+		chunkSizeSlider.getSliderValueListeners().add(new SliderValueListener() {
+			
+			@Override
+			public void valueChanged(Slider slider, int previousValue) {
+				updateChunkSizeLabel();
+			}
+		});
 		
-		cancelButton.getButtonPressListeners().add(new ButtonPressListener() {
-
+		proxyCheckbox.getButtonPressListeners().add(new ButtonPressListener() {
+			
 			@Override
 			public void buttonPressed(Button button) {
-				load(new GalleryConfig());
+				updateProxyState();
 			}
-			
 		});
+		
+		reloadButton.getButtonPressListeners().add(new ButtonPressListener() {
+            @Override
+            public void buttonPressed(Button button) {
+            	ConfigUtil.INSTANCE.loadUserConfig();
+            	loadAccessors();
+            }
+        });
 	}
 	
 	protected void updateChunkSizeLabel() {
@@ -164,7 +197,13 @@ public class GalleryConfigForm extends Border implements Bindable {
 		proxyPasswordTextInput.setVisible(proxyCheckbox.isSelected());
 	}
 	
-	public void load(GalleryConfig galleryConfig) {
+	public void loadAccessors() {
+		Config config = ConfigUtil.INSTANCE.getUserConfig();
+		GalleryConfig galleryConfig = config.getCurrentGalleryConfig();
+		
+		configListButton.setListData(new ListAdapter<GalleryConfig>(config.getGalleryConfigs()));
+		configListButton.setSelectedItem(galleryConfig);
+
 		for (FieldAccessor<? extends Component> accessor : accessors) {
 			accessor.setValue(galleryConfig.getValue(accessor.getFieldName()));
 		}
@@ -172,7 +211,18 @@ public class GalleryConfigForm extends Border implements Bindable {
 		updateProxyState();
 	}
 	
-	public void save(GalleryConfig galleryConfig) {
+	public void saveAccessors() {
+		Config config = ConfigUtil.INSTANCE.getUserConfig();
+		GalleryConfig galleryConfig = config.getCurrentGalleryConfig();
+
+		
+		
+		for (FieldAccessor<? extends Component> accessor : accessors) {
+			galleryConfig.setValue(accessor.getFieldName(), accessor.getValue());
+		}
+	}
+	
+	public void validateAccessors() {
     	form.clearFlags();
         errorLabel.setText("");
 
@@ -190,7 +240,6 @@ public class GalleryConfigForm extends Border implements Bindable {
     				}
     			}
 			}
-			galleryConfig.setValue(accessor.getFieldName(), accessor.getValue());
 		}
 	}
 	

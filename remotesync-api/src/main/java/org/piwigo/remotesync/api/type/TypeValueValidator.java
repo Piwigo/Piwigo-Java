@@ -12,8 +12,7 @@ package org.piwigo.remotesync.api.type;
 
 import java.io.File;
 
-import org.apache.commons.io.FilenameUtils;
-import org.piwigo.remotesync.api.Constants.ImageExtension;
+import org.piwigo.remotesync.api.Constants;
 
 public class TypeValueValidator extends ValueValidator {
 	@Override
@@ -27,7 +26,7 @@ public class TypeValueValidator extends ValueValidator {
 			File file = (File) object;
 			if (file.exists()) {
 				if (file.isFile()) {
-					if (hasImageExtension(file.getName())) {
+					if (hasImageExtension(file)) {
 						return OK;
 					}
 					return "must be an image";
@@ -39,13 +38,8 @@ public class TypeValueValidator extends ValueValidator {
 		return "must be a file";
 	}
 
-	protected boolean hasImageExtension(String filename) {
-		try {
-			ImageExtension.valueOf(FilenameUtils.getExtension(filename).toLowerCase());
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
+	protected boolean hasImageExtension(File file) {
+		return Constants.IMAGE_EXTENSIONS_FILTER.accept(file);
 	}
 
 	@Override
