@@ -21,8 +21,8 @@ cd remotesync
 mvn -Dmaven.test.skip=true clean package
 
 #show help
-java -jar ../remotesync-api/target/remotesync-api-0.0.5-jar-with-dependencies.jar -help
-java -jar ../remotesync-ui/target/remotesync-ui-0.0.5-jar-with-dependencies.jar -help
+java -jar ../remotesync-api/target/remotesync-api-0.0.6-jar-with-dependencies.jar -help
+java -jar ../remotesync-ui/target/remotesync-ui-0.0.6-jar-with-dependencies.jar -help
 
 #launch remote sync ui
-java -jar ../remotesync-ui/target/remotesync-ui-0.0.5-jar-with-dependencies.jar
+java -jar ../remotesync-ui/target/remotesync-ui-0.0.6-jar-with-dependencies.jar

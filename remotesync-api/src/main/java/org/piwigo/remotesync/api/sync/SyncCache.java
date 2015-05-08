@@ -167,7 +167,7 @@ public class SyncCache {
 
 		protected void writeToFile(CacheElement cacheElement) {
 			try {
-				FileUtils.writeStringToFile(cacheFile, "\n" + cacheElement.toString(), true);
+				FileUtils.writeStringToFile(cacheFile, cacheElement.toString() + "\n", true);
 			} catch (IOException e) {
 				logger.error("Cannot write " + LEGACY_CACHE_FILE_NAME + " in directory " + cacheFile.getParent(), e);
 			}

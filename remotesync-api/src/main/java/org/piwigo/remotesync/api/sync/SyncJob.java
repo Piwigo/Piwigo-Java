@@ -35,18 +35,23 @@ public class SyncJob extends Job {
 	private static abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 
 		protected GalleryConfig config;
-		
-		protected Map<File, FileCache> fileCaches = new HashMap<File, FileCache>(); 
+		protected File startDirectory; 
+		protected Map<File, FileCache> fileCaches = new HashMap<File, FileCache>();
 
 		private SyncDirectoryWalker(GalleryConfig config) {
 			super(null, Constants.IMAGE_EXTENSIONS_FILTER, -1);
 			this.config = config;
+			startDirectory = new File(config.getDirectory());
 		}
 		
 		@Override
 		protected void handleDirectoryStart(File directory, int depth, Collection<File> results) throws IOException {
 			FileCache fileCache = new SyncCache.FileCache(config.getUrl(), SyncCache.getLegacyCacheFile(directory)).parseFile();
 			fileCaches.put(directory, fileCache);
+
+			//do not create an album for root directory
+			if (directory.equals(startDirectory))
+				return;
 			
 			if (fileCache.albumCache != null) {
 				logger.debug("album already in cache : " + directory);
@@ -81,7 +86,7 @@ public class SyncJob extends Job {
 		}
 
 		public void walk() throws IOException {
-			walk(new File(config.getDirectory()), null);
+			walk(startDirectory, null);
 		}
 		
 		protected abstract Integer createAlbum(File directory, Integer parentAlbumId);
@@ -117,7 +122,7 @@ public class SyncJob extends Job {
 			super(config);
 		}
 		
-		protected void connect() {
+		protected void connect() throws IOException {
 			try {
 				logger.info("Connecting... ");
 				client = new AuthenticatedWSClient(config.getUrl()).login(config.getUsername(), config.getPassword());
@@ -125,6 +130,7 @@ public class SyncJob extends Job {
 			} catch (ClientServerException e) {
 				client = null;
 				logger.error("Unable to connect : " + e.getMessage());
+				throw new CancelException("Unable to connect", startDirectory, 0);
 			}
 		}
 
@@ -153,32 +159,37 @@ public class SyncJob extends Job {
 		@Override
 		protected Integer createAlbum(File directory, Integer parentAlbumId) {
 			try {
-				if (client != null)
-					return client.sendRequest(new PwgCategoriesAddRequest(directory.getName()).setParent(parentAlbumId)).id;
+				return client.sendRequest(new PwgCategoriesAddRequest(directory.getName()).setParent(parentAlbumId)).id;
 			} catch (ClientServerException e) {
 				logger.error("Cannot create album for " + directory, e);
+				return null;
 			}
-			return null;
 		}
 
 		@Override
 		protected Integer createPicture(File file, Integer albumId) {
 			try {
-				if (client != null)
-					return client.sendRequest(new PwgImagesAddSimpleRequest(file).setCategory(albumId)).image_id;
+				PwgImagesAddSimpleRequest request = new PwgImagesAddSimpleRequest(file);
+				//FIXME should we upload a picture without album?
+				if (albumId != null)
+					request.setCategory(albumId);
+				return client.sendRequest(request).image_id;
 			} catch (ClientServerException e) {
 				logger.error("Cannot updload image for " + file, e);
+				return null;
 			}
-			return null;
 		}
 		
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(SyncJob.class);
 
-	protected void doExecute() {
+	protected void doExecute() throws Exception {
 		GalleryConfig config = ConfigUtil.INSTANCE.getUserConfig().getCurrentGalleryConfig();
 
+		//TODO shoud validate config
+//		GalleryConfigValidator.INSTANCE.validate(config);
+		
 		logger.info("User {} will sync gallery {} with directory {}", config.getUsername(), config.getUrl(), config.getDirectory());
 
 		try {

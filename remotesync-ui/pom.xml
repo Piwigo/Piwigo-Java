@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>piwigo</groupId>
 			<artifactId>remotesync-api</artifactId>
-			<version>0.0.5</version>
+			<version>0.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.pivot</groupId>
@@ -66,7 +66,7 @@
 	<parent>
 		<groupId>piwigo</groupId>
 		<artifactId>remotesync</artifactId>
-		<version>0.0.5</version>
+		<version>0.0.6</version>
 		<relativePath>../remotesync</relativePath>
 	</parent>
 </project>

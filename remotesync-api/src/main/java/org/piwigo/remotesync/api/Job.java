@@ -29,7 +29,7 @@ public abstract class Job {
 		try {
 			doExecute();
 		} catch (Exception e) {
-			// FIXME
+			logger.error("Error in job " + this, e);
 		} finally {
 			running = false;
 		}
@@ -44,7 +44,7 @@ public abstract class Job {
 		}).start();
 	}
 
-	protected abstract void doExecute();
+	protected abstract void doExecute() throws Exception;
 
 	public boolean isRunning() {
 		return running;
