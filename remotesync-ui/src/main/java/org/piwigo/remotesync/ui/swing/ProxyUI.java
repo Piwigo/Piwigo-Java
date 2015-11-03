@@ -24,7 +24,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.piwigo.remotesync.api.conf.GalleryConfig;
+import org.piwigo.remotesync.api.conf.SyncConfiguration;
 
 public class ProxyUI extends JFrame {
 
@@ -37,11 +37,11 @@ public class ProxyUI extends JFrame {
 	private JTextField proxyPasswordtextField;
 	private JCheckBox chckbxUseProxy;
 
-	public static void run(final GalleryConfig config) {
+	public static void run(final SyncConfiguration syncConfiguration) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProxyUI frame = new ProxyUI(config);
+					ProxyUI frame = new ProxyUI(syncConfiguration);
 					frame.chckbxUseProxy.setSelected(false);
 					frame.disableTextFields();
 					frame.setVisible(true);
@@ -55,9 +55,9 @@ public class ProxyUI extends JFrame {
 	/**
 	 * Create the frame.
 	 * 
-	 * @param config
+	 * @param syncConfiguration
 	 */
-	public ProxyUI(final GalleryConfig config) {
+	public ProxyUI(final SyncConfiguration syncConfiguration) {
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -114,21 +114,21 @@ public class ProxyUI extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				super.windowClosing(e);
-				config.setUsesProxy(Boolean.toString(chckbxUseProxy.isSelected()));
-				config.setProxyUrl(proxyUrltextField.getText());
-				config.setProxyPort(proxyPorttextField.getText());
-				config.setProxyUsername(proxyLogintextField.getText());
-				config.setProxyPassword(proxyPasswordtextField.getText());
+				syncConfiguration.setUsesProxy(Boolean.toString(chckbxUseProxy.isSelected()));
+				syncConfiguration.setProxyUrl(proxyUrltextField.getText());
+				syncConfiguration.setProxyPort(proxyPorttextField.getText());
+				syncConfiguration.setProxyUsername(proxyLogintextField.getText());
+				syncConfiguration.setProxyPassword(proxyPasswordtextField.getText());
 			}
 
 			@Override
 			public void windowOpened(WindowEvent e) {
 				super.windowOpened(e);
-				chckbxUseProxy.setSelected(config.getUsesProxyBoolean());
-				proxyUrltextField.setText(config.getProxyUrl());
-				proxyPorttextField.setText(config.getProxyPort() + "");
-				proxyLogintextField.setText(config.getProxyUsername());
-				proxyPasswordtextField.setText(config.getProxyPassword());
+				chckbxUseProxy.setSelected(syncConfiguration.getUsesProxy());
+				proxyUrltextField.setText(syncConfiguration.getProxyUrl());
+				proxyPorttextField.setText(syncConfiguration.getProxyPort() + "");
+				proxyLogintextField.setText(syncConfiguration.getProxyUsername());
+				proxyPasswordtextField.setText(syncConfiguration.getProxyPassword());
 			}
 
 		});

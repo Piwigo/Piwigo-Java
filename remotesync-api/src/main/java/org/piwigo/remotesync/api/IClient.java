@@ -8,7 +8,7 @@
  * Contributors:
  *     Matthieu Helleboid - initial API and implementation
  ******************************************************************************/
-package org.piwigo.remotesync.api.client;
+package org.piwigo.remotesync.api;
 
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.AbstractRequest;
@@ -16,13 +16,13 @@ import org.piwigo.remotesync.api.request.ComposedRequest;
 import org.piwigo.remotesync.api.response.BasicResponse;
 import org.piwigo.remotesync.api.response.ComposedResponse;
 
-public interface Client {
+public interface IClient {
 	public <T extends BasicResponse> T sendRequest(AbstractRequest<T> request) throws ClientServerException;
 
 	public <T extends BasicResponse> ComposedResponse<T> sendRequest(ComposedRequest<T> composedRequest) throws ClientServerException;
 
-	public Client login(String username, String password) throws ClientServerException;
+	public IClient login() throws ClientServerException;
 
-	public Client logout() throws ClientServerException;
+	public IClient logout() throws ClientServerException;
 
 }

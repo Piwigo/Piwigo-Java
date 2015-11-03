@@ -15,9 +15,9 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.OptionHandlerFilter;
-import org.piwigo.remotesync.api.conf.Config;
-import org.piwigo.remotesync.api.conf.ConfigUtil;
-import org.piwigo.remotesync.api.conf.GalleryConfig;
+import org.piwigo.remotesync.api.conf.UserConfiguration;
+import org.piwigo.remotesync.api.conf.ConfigurationUtil;
+import org.piwigo.remotesync.api.conf.SyncConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,15 +27,15 @@ public abstract class AbstractMain {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractMain.class);
 
 	protected void run(String[] args) {
-		GalleryConfig parsedGalleryConfig = new GalleryConfig();
-		CmdLineParser cmdLineParser = createParser(parsedGalleryConfig);
+		SyncConfiguration parsedSyncConfiguration = new SyncConfiguration();
+		CmdLineParser cmdLineParser = createParser(parsedSyncConfiguration);
 
 		try {
 			cmdLineParser.parseArgument(args);
 
 			configureLog(debug);
 			
-			createConfig(parsedGalleryConfig);
+			createConfiguration(parsedSyncConfiguration);
 			
 			if (help) {
 				System.out.println("Piwigo Remote Sync : java -jar remotesync.jar");
@@ -61,19 +61,19 @@ public abstract class AbstractMain {
 	@Option(name = "-help", usage = "help")
 	protected boolean help = false;
 
-	protected CmdLineParser createParser(GalleryConfig galleryConfig) {
+	protected CmdLineParser createParser(ISyncConfiguration syncConfiguration) {
 		CmdLineParser cmdLineParser = new CmdLineParser(null);
 		new ClassParser().parse(this, cmdLineParser);
-		new ClassParser().parse(galleryConfig, cmdLineParser);
+		new ClassParser().parse(syncConfiguration, cmdLineParser);
 		return cmdLineParser;
 	}
 
-	protected void createConfig(GalleryConfig parsedGalleryConfig) {
-		Config config = ConfigUtil.INSTANCE.getUserConfig();
+	protected void createConfiguration(SyncConfiguration parsedSyncConfiguration) {
+		UserConfiguration userConfiguration = ConfigurationUtil.INSTANCE.getUserConfiguration();
 		
 		//if some gallery configuration was provided through parameters
-		if (!parsedGalleryConfig.isEmpty()) 
-			config.setCurrentGalleryConfig(parsedGalleryConfig);
+		if (!parsedSyncConfiguration.isEmpty()) 
+			userConfiguration.setCurrentSyncConfiguration(parsedSyncConfiguration);
 	}
 
 	protected void configureLog(boolean debug) {

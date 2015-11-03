@@ -16,9 +16,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.piwigo.remotesync.api.API;
-import org.piwigo.remotesync.api.client.Client;
+import org.piwigo.remotesync.api.IClient;
+import org.piwigo.remotesync.api.ISyncConfiguration;
 import org.piwigo.remotesync.api.client.WSClient;
-import org.piwigo.remotesync.api.conf.GalleryConfig;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.reflection.MethodReflection;
 import org.piwigo.remotesync.api.reflection.ReflectionRegistry;
@@ -53,7 +53,7 @@ public class APITest extends AbstractTestCase {
 	public void testAPI() throws ClientServerException, URISyntaxException {
 		API api = new API(getClient());
 		int initial = api.galleryGetInfos().nb_elements;
-		ComposedResponse<PwgImagesAddResponse> imagesAddWithChunkRequest = api.imagesAddWithChunkRequest(new PwgImagesAddWithChunkRequest(getPictureFile()).setAuthor("remote sync"));
+		ComposedResponse<PwgImagesAddResponse> imagesAddWithChunkRequest = api.imagesAddWithChunkRequest(new PwgImagesAddWithChunkRequest(getImageFile()).setAuthor("remote sync"));
 		assertEquals(initial + 1, api.galleryGetInfos().nb_elements.intValue());
 		api.imagesDelete(new PwgImagesDeleteRequest(imagesAddWithChunkRequest.getResponse().image_id));
 		assertEquals(initial, api.galleryGetInfos().nb_elements.intValue());
@@ -73,15 +73,15 @@ public class APITest extends AbstractTestCase {
 	}
 
 	public void testEnum() throws Exception {
-		Client client = getClient();
+		IClient client = getClient();
 		PwgCategoriesAddResponse categoryResponse = client.sendRequest(new PwgCategoriesAddRequest("test").setStatus(Status.PRIVATE));
 		client.sendRequest(new PwgCategoriesDeleteRequest(categoryResponse.id));
 	}
 
 	public void testLoginLogout() throws Exception {
-		GalleryConfig galleryConfig = getTestConfig().getCurrentGalleryConfig();
-		Client client = new WSClient(galleryConfig.getUrl());
-		client.sendRequest(new PwgSessionLoginRequest(galleryConfig.getUsername(), galleryConfig.getPassword()));
+		ISyncConfiguration syncConfiguration = getTestConfiguration().getCurrentSyncConfiguration();
+		IClient client = new WSClient(syncConfiguration);
+		client.sendRequest(new PwgSessionLoginRequest(syncConfiguration.getUsername(), syncConfiguration.getPassword()));
 		assertTrue(client.sendRequest(new PwgSessionGetStatusRequest()).isAdmin());
 		client.sendRequest(new PwgSessionLogoutRequest());
 		assertFalse(client.sendRequest(new PwgSessionGetStatusRequest()).isLogged());
@@ -89,8 +89,8 @@ public class APITest extends AbstractTestCase {
 
 	public void testWrongLogin() {
 		try {
-			GalleryConfig galleryConfig = getTestConfig().getCurrentGalleryConfig();
-			new WSClient(galleryConfig.getUrl()).sendRequest(new PwgSessionLoginRequest("unknown", "unknown"));
+			ISyncConfiguration syncConfiguration = getTestConfiguration().getCurrentSyncConfiguration();
+			new WSClient(syncConfiguration).sendRequest(new PwgSessionLoginRequest("unknown", "unknown"));
 			fail("Should not login with wrong login/password");
 		} catch (Exception e) {
 		}
@@ -116,8 +116,19 @@ public class APITest extends AbstractTestCase {
 	}
 
 	public void testFakePasswordConverter() throws ParseException {
-		String password = "password";
+		doTestFakePasswordConverter("a");
+		doTestFakePasswordConverter("1");
+		doTestFakePasswordConverter("password");
+		doTestFakePasswordConverter("1234567890&й(-и_за)^$щ*,;:!?./§µ%MP");
+	}
+
+	private void doTestFakePasswordConverter(String password) throws ParseException {
 		assertFalse(password.equals(StringUtil.fakeEncryptPassword(password)));
 		assertEquals(password, StringUtil.fakeDecryptPassword(StringUtil.fakeEncryptPassword(password)));
+	}
+	
+	public void testRot13() {
+		assertEquals("aB123", StringUtil.rot13(StringUtil.rot13("aB123")));
+		assertEquals("this is my 1st rot13 automatic test", StringUtil.rot13("guvf vf zl 1fg ebg13 nhgbzngvp grfg"));
 	}
 }

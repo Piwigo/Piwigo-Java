@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.piwigo.remotesync.api;
 
-import org.piwigo.remotesync.api.client.Client;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.*;
 import org.piwigo.remotesync.api.response.*;
@@ -18,7 +17,7 @@ import org.piwigo.remotesync.api.response.*;
 @org.piwigo.remotesync.generator.Generated
 public abstract class AbstractAPI {
 
-	protected abstract Client getClient();
+	protected abstract IClient getClient();
 
 	public PwgCaddieAddResponse caddieAdd(PwgCaddieAddRequest request) throws ClientServerException {
 		return getClient().sendRequest(request);

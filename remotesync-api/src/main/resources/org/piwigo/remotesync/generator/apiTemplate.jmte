@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.piwigo.remotesync.api;
 
-import org.piwigo.remotesync.api.client.Client;
+import org.piwigo.remotesync.api.IClient;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.*;
 import org.piwigo.remotesync.api.response.*;

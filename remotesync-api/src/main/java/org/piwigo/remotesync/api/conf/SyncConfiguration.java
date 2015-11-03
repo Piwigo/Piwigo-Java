@@ -13,15 +13,16 @@ package org.piwigo.remotesync.api.conf;
 import java.lang.reflect.Field;
 
 import org.kohsuke.args4j.Option;
-import org.piwigo.remotesync.api.conf.GalleryConfigValidator.Validator;
-import org.piwigo.remotesync.api.conf.GalleryConfigValidator.ValidatorRequired;
-import org.piwigo.remotesync.api.conf.GalleryConfigValidator.ValidatorType;
+import org.piwigo.remotesync.api.ISyncConfiguration;
+import org.piwigo.remotesync.api.conf.SyncConfigurationValidator.Validator;
+import org.piwigo.remotesync.api.conf.SyncConfigurationValidator.ValidatorRequired;
+import org.piwigo.remotesync.api.conf.SyncConfigurationValidator.ValidatorType;
 import org.piwigo.remotesync.api.xml.FakePasswordConverter;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.convert.Convert;
 
-public class GalleryConfig {
-	private static final String DIRECTORY_DEFAULT = ConfigUtil.INSTANCE.getUserCurrentDirectory().getAbsolutePath();
+public class SyncConfiguration implements ISyncConfiguration {
+	private static final String DIRECTORY_DEFAULT = ConfigurationUtil.INSTANCE.getUserCurrentDirectory().getAbsolutePath();
 
 	private static final String CHUNK_SIZE_DEFAULT = "500";
 
@@ -67,6 +68,7 @@ public class GalleryConfig {
 	protected String proxyUsername;
 
 	@Element(required = false)
+	@Convert(FakePasswordConverter.class)
 	@Option(name = "-ppwd", usage = "proxy password")
 	@Validator(type = ValidatorType.string)
 	protected String proxyPassword;
@@ -78,7 +80,7 @@ public class GalleryConfig {
 
 	public String getValue(String fieldName) {
 		try {
-			Field field = GalleryConfig.class.getDeclaredField(fieldName);
+			Field field = SyncConfiguration.class.getDeclaredField(fieldName);
 			return (String) field.get(this);
 		} catch (Exception e) {
 			throw new IllegalStateException(fieldName + " not found", e);
@@ -87,7 +89,7 @@ public class GalleryConfig {
 
 	public void setValue(String fieldName, String value) {
 		try {
-			Field field = GalleryConfig.class.getDeclaredField(fieldName);
+			Field field = SyncConfiguration.class.getDeclaredField(fieldName);
 			field.set(this, value);
 		} catch (Exception e) {
 			throw new IllegalStateException(fieldName + " not found", e);
@@ -126,8 +128,12 @@ public class GalleryConfig {
 		this.directory = directory;
 	}
 
-	public String getUsesProxy() {
-		return usesProxy;
+	public boolean getUsesProxy() {
+		try {
+			return Boolean.parseBoolean(usesProxy);
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 	public void setUsesProxy(String string) {
@@ -142,8 +148,12 @@ public class GalleryConfig {
 		this.proxyUrl = proxyUrl;
 	}
 
-	public String getProxyPort() {
-		return proxyPort;
+	public int getProxyPort() {
+		try {
+			return Integer.parseInt(proxyPort);
+		} catch (NumberFormatException e) {
+			return -1;
+		}
 	}
 
 	public void setProxyPort(String proxyPort) {
@@ -166,24 +176,7 @@ public class GalleryConfig {
 		this.proxyPassword = proxyPassword;
 	}
 
-	public String getChunkSize() {
-		return chunkSize;
-	}
-
-	public void setChunkSize(String chunkSize) {
-		this.chunkSize = chunkSize;
-	}
-	
-	public boolean getUsesProxyBoolean() {
-		try {
-			return Boolean.parseBoolean(usesProxy);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-	}
-
-
-	public Integer getChunkSizeInteger() {
+	public int getChunkSize() {
 		try {
 			return Integer.parseInt(chunkSize);
 		} catch (NumberFormatException e) {
@@ -191,8 +184,12 @@ public class GalleryConfig {
 		}
 	}
 
+	public void setChunkSize(String chunkSize) {
+		this.chunkSize = chunkSize;
+	}
+	
 	public boolean isEmpty() {
-		return this.equals(new GalleryConfig());
+		return this.equals(new SyncConfiguration());
 	}
 	
 	@Override
@@ -220,7 +217,7 @@ public class GalleryConfig {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		GalleryConfig other = (GalleryConfig) obj;
+		SyncConfiguration other = (SyncConfiguration) obj;
 		if (chunkSize == null) {
 			if (other.chunkSize != null)
 				return false;
@@ -276,7 +273,7 @@ public class GalleryConfig {
 
 	@Override
 	public String toString() {
-		return "GalleryConfig [url=" + url + 
+		return "SyncConfiguration [url=" + url + 
 				", username=" + username + 
 				", password=" + password + 
 				", directory=" + directory + 

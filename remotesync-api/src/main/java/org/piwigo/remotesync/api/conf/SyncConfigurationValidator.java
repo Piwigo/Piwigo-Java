@@ -19,10 +19,11 @@ import java.lang.reflect.Field;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.piwigo.remotesync.api.ISyncConfiguration;
 
-public class GalleryConfigValidator {
+public class SyncConfigurationValidator {
 
-	public static final GalleryConfigValidator INSTANCE = new GalleryConfigValidator();
+	public static final SyncConfigurationValidator INSTANCE = new SyncConfigurationValidator();
 
 	public static enum ValidatorType {
 		url, string, integer, dir
@@ -32,13 +33,13 @@ public class GalleryConfigValidator {
 		yes, proxy, no;
 	}
 	
-	public static class GalleryValidationException extends Exception {
+	public static class SyncValidationException extends Exception {
 
 		private static final long serialVersionUID = 2828722578008089789L;
 
 		public String fieldName;
 
-		public GalleryValidationException(String fieldName, String message) {
+		public SyncValidationException(String fieldName, String message) {
 			super(message);
 			this.fieldName = fieldName;
 		}
@@ -53,29 +54,29 @@ public class GalleryConfigValidator {
 	}
 
 	public static void main(String[] args) throws Exception {
-		INSTANCE.validate(new GalleryConfig());
+		INSTANCE.validate(new SyncConfiguration());
 	}
 	
-	public void validate(GalleryConfig galleryConfig) throws IllegalArgumentException, IllegalAccessException, GalleryValidationException {
-		for (Field field : GalleryConfig.class.getDeclaredFields()) {
-			String value = (String) field.get(galleryConfig);
-			Boolean usesProxy = galleryConfig.getUsesProxyBoolean();
+	public void validate(ISyncConfiguration syncConfiguration) throws IllegalArgumentException, IllegalAccessException, SyncValidationException {
+		for (Field field : SyncConfiguration.class.getDeclaredFields()) {
+			String value = (String) field.get(syncConfiguration);
+			Boolean usesProxy = syncConfiguration.getUsesProxy();
 			
 			validate(field, value, usesProxy);
 		}
 	}
 
-	public void validate(String fieldName, String value, Boolean usesProxy) throws GalleryValidationException {
-		for (Field field : GalleryConfig.class.getDeclaredFields()) {
+	public void validate(String fieldName, String value, Boolean usesProxy) throws SyncValidationException {
+		for (Field field : SyncConfiguration.class.getDeclaredFields()) {
 			if (field.getName().equals(fieldName)) {
 				validate(field, value, usesProxy);
 				return;
 			}
 		}
-		throw new GalleryValidationException(fieldName, "doesn't exist");
+		throw new SyncValidationException(fieldName, "doesn't exist");
 	}
 	
-	protected void validate(Field field, String value, Boolean usesProxy) throws GalleryValidationException {
+	protected void validate(Field field, String value, Boolean usesProxy) throws SyncValidationException {
 		Validator validator = field.getAnnotation(Validator.class);
 		if (validator != null) {
 			String fieldName = field.getName();
@@ -85,15 +86,15 @@ public class GalleryConfigValidator {
 		}
 	}
 
-	protected void validateRequired(Validator validator, String fieldName, String value, Boolean proxy) throws GalleryValidationException {
+	protected void validateRequired(Validator validator, String fieldName, String value, Boolean proxy) throws SyncValidationException {
 		switch (validator.required()) {
 		case yes:
 			if (value == null || value.length() == 0)
-				throw new GalleryValidationException(fieldName, "is required");
+				throw new SyncValidationException(fieldName, "is required");
 			break;
 		case proxy:
 			if (proxy != null && proxy && (value == null || value.length() == 0))
-				throw new GalleryValidationException(fieldName, "is required");
+				throw new SyncValidationException(fieldName, "is required");
 			break;
 		case no:
 			break;
@@ -102,7 +103,7 @@ public class GalleryConfigValidator {
 		}
 	}
 
-	protected void validateType(Validator validator, String fieldName, String value) throws GalleryValidationException {
+	protected void validateType(Validator validator, String fieldName, String value) throws SyncValidationException {
 		if (value == null || value.length() == 0)
 			return;
 		
@@ -110,25 +111,25 @@ public class GalleryConfigValidator {
 		case url:
 			Pattern pattern = Pattern.compile("https?://.+");
 			if (!pattern.matcher(value).matches())
-				throw new GalleryValidationException(fieldName, "is not an url");
+				throw new SyncValidationException(fieldName, "is not an url");
 			break;
 		case dir:
 			File file;
 			try {
 				file = new File(value);
 				if (!file.exists())
-					throw new GalleryValidationException(fieldName, "doesn't exist");
+					throw new SyncValidationException(fieldName, "doesn't exist");
 				if (!file.isDirectory())
-					throw new GalleryValidationException(fieldName, "is not a directory");
+					throw new SyncValidationException(fieldName, "is not a directory");
 			} catch (Exception e) {
-				throw new GalleryValidationException(fieldName, "is invalid");
+				throw new SyncValidationException(fieldName, "is invalid");
 			}
 			break;
 		case integer:
 			try {
 				Integer.parseInt(value);
 			} catch (NumberFormatException e) {
-				throw new GalleryValidationException(fieldName, "is not an integer");
+				throw new SyncValidationException(fieldName, "is not an integer");
 			}
 			break;
 		case string:

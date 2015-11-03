@@ -23,7 +23,7 @@ public class PwgImagesAddWithChunkRequest extends ComposedRequest<PwgImagesAddRe
 
 	public PwgImagesAddWithChunkRequest(File file) throws ClientException {
 		addRequest(new PwgImagesAddAllChunksRequest(file));
-		request = new PwgImagesAddRequest(FileUtil.getMD5Sum(file));
+		request = new PwgImagesAddRequest(FileUtil.getFileContentMD5Sum(file));
 		addRequest(request);
 	}
 	

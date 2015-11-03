@@ -12,18 +12,25 @@ package org.piwigo.remotesync.api.conf;
 
 import java.io.File;
 
+import org.piwigo.remotesync.api.IClientConfiguration;
 import org.piwigo.remotesync.api.xml.PersisterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ConfigUtil {
+public class ConfigurationUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(ConfigUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(ConfigurationUtil.class);
 
-	public static final ConfigUtil INSTANCE = new ConfigUtil();
+	public static final ConfigurationUtil INSTANCE = new ConfigurationUtil();
 
-	protected Config userConfig;
+	protected UserConfiguration userConfiguration;
 
+	public IClientConfiguration createConfiguration(String url) {
+		SyncConfiguration configuration = new SyncConfiguration();
+		configuration.setUrl(url);
+		return configuration;
+	}
+	
 	public File getUserCurrentDirectory() {
 		return new File(System.getProperty("user.dir"));
 	}
@@ -36,10 +43,10 @@ public class ConfigUtil {
 		return new File(getUserHomeDirectory(), ".config/piwigo/remotesync");
 	}
 
-	public Config getUserConfig() {
-		if (userConfig == null)
+	public UserConfiguration getUserConfiguration() {
+		if (userConfiguration == null)
 			loadUserConfig();
-		return userConfig;
+		return userConfiguration;
 	}
 
 	public void loadUserConfig() {
@@ -47,14 +54,14 @@ public class ConfigUtil {
 	}
 
 	public void saveUserConfig() {
-		saveConfig(getUserConfigFile(), userConfig);
+		saveConfig(getUserConfigFile(), userConfiguration);
 	}
 
 	public void loadConfig(File configFile) {
 		if (configFile.exists()) {
 			logger.debug("found userConfig file " + configFile.getAbsolutePath());
 			try {
-				userConfig = PersisterFactory.createPersister().read(Config.class, configFile);
+				userConfiguration = PersisterFactory.createPersister().read(UserConfiguration.class, configFile);
 				logger.debug("configuration loaded");
 				return;
 			} catch (Exception e) {
@@ -63,10 +70,10 @@ public class ConfigUtil {
 		}
 			logger.debug("no userConfig file found");
 
-		userConfig = new Config();
+		userConfiguration = new UserConfiguration();
 	}
 
-	public void saveConfig(File configFile, Config config) {
+	public void saveConfig(File configFile, UserConfiguration config) {
 		File configDirectory = configFile.getParentFile();
 
 		if (!configDirectory.exists())

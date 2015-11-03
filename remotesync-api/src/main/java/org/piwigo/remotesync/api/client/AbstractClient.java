@@ -12,13 +12,14 @@ package org.piwigo.remotesync.api.client;
 
 import java.util.Iterator;
 
+import org.piwigo.remotesync.api.IClient;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.AbstractRequest;
 import org.piwigo.remotesync.api.request.ComposedRequest;
 import org.piwigo.remotesync.api.response.BasicResponse;
 import org.piwigo.remotesync.api.response.ComposedResponse;
 
-public abstract class AbstractClient implements Client {
+public abstract class AbstractClient implements IClient {
 
 	@Override
 	public final <T extends BasicResponse> T sendRequest(AbstractRequest<T> request) throws ClientServerException {

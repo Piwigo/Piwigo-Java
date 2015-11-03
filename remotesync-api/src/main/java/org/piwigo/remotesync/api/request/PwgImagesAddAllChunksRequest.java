@@ -13,7 +13,7 @@ package org.piwigo.remotesync.api.request;
 import java.io.File;
 import java.util.Iterator;
 
-import org.piwigo.remotesync.api.conf.ConfigUtil;
+import org.piwigo.remotesync.api.conf.ConfigurationUtil;
 import org.piwigo.remotesync.api.exception.ClientException;
 import org.piwigo.remotesync.api.request.PwgImagesAddChunkRequest;
 import org.piwigo.remotesync.api.response.BasicResponse;
@@ -23,7 +23,7 @@ public class PwgImagesAddAllChunksRequest extends ComposedRequest<BasicResponse>
 
 	private File file;
 	//TODO store it
-	private final int chunkSize = 1024 * ConfigUtil.INSTANCE.getUserConfig().getCurrentGalleryConfig().getChunkSizeInteger();
+	private final int chunkSize = 1024 * ConfigurationUtil.INSTANCE.getUserConfiguration().getCurrentSyncConfiguration().getChunkSize();
 
 	public PwgImagesAddAllChunksRequest(File file) throws ClientException {
 		this.file = file;
@@ -32,7 +32,7 @@ public class PwgImagesAddAllChunksRequest extends ComposedRequest<BasicResponse>
 	@Override
 	public Iterator<AbstractRequest<? extends BasicResponse>> iterator() {
 		final int chunkNumber = FileUtil.getChunkNumber(file, chunkSize);
-		final String md5Sum = FileUtil.getMD5Sum(file);
+		final String md5Sum = FileUtil.getFileContentMD5Sum(file);
 
 		return new ComposedRequestIterator(requests) {
 

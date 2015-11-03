@@ -1,9 +1,13 @@
-<config currentGalleryConfigId="0">
-   <galleryConfigs class="java.util.ArrayList">
-      <galleryConfig>
+<userConfiguration currentSyncConfigurationId="0">
+   <syncConfigurations class="java.util.ArrayList">
+      <syncConfiguration>
          <url>http://mygallery.piwigo.com</url>
          <username>username</username>
-         <password>Base64password==</password>
-      </galleryConfig>
-   </galleryConfigs>
-</config>
+         <password>Xy1bXS1f</password>
+         <usesProxy>false</usesProxy>
+         <proxyUrl>http://myproxy.server.com</proxyUrl>
+         <proxyPort>8000</proxyPort>
+         <chunkSize>500</chunkSize>
+      </syncConfiguration>
+   </syncConfigurations>
+</userConfiguration>

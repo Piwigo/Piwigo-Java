@@ -16,25 +16,25 @@ import org.apache.pivot.wtk.Application;
 import org.apache.pivot.wtk.DesktopApplicationContext;
 import org.apache.pivot.wtk.Display;
 import org.apache.pivot.wtk.Window;
-import org.piwigo.remotesync.api.conf.ConfigUtil;
+import org.piwigo.remotesync.api.conf.ConfigurationUtil;
 
 public class RemotesyncUI extends Window implements Application {
 
-	private GalleryConfigForm galleryConfigForm;
+	private SyncConfigurationForm syncConfigurationForm;
 
 	public void startup(final Display display, final Map<String, String> properties) throws Exception {
-		galleryConfigForm = (GalleryConfigForm) new BXMLSerializer().readObject(GalleryConfigForm.class, "galleryConfigForm.bxml");
-		galleryConfigForm.loadAccessors();
+		syncConfigurationForm = (SyncConfigurationForm) new BXMLSerializer().readObject(SyncConfigurationForm.class, "syncConfigurationForm.bxml");
+		syncConfigurationForm.loadAccessors();
 
-		this.setContent(galleryConfigForm);
+		this.setContent(syncConfigurationForm);
 		this.setTitle("Piwigo Remote Sync");
 		this.setMaximized(true);
 		this.open(display);
 	}
 
 	public boolean shutdown(final boolean optional) throws Exception {
-		galleryConfigForm.saveAccessors();
-		ConfigUtil.INSTANCE.saveUserConfig();
+		syncConfigurationForm.saveAccessors();
+		ConfigurationUtil.INSTANCE.saveUserConfig();
 		
 		this.close();
 		return false;

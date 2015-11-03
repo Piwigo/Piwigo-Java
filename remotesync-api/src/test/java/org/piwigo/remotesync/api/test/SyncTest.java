@@ -12,38 +12,33 @@ package org.piwigo.remotesync.api.test;
 
 import java.net.URISyntaxException;
 
-import org.piwigo.remotesync.api.sync.SyncCache.AlbumCache;
-import org.piwigo.remotesync.api.sync.SyncCache.FileCache;
-import org.piwigo.remotesync.api.sync.SyncCache.MemoryCache;
-import org.piwigo.remotesync.api.sync.SyncCache.PictureCache;
+import org.piwigo.remotesync.api.cache.AlbumCacheElement;
+import org.piwigo.remotesync.api.cache.ImageCacheElement;
+import org.piwigo.remotesync.api.cache.LegacyCache;
 
 public class SyncTest extends AbstractTestCase {
 
-	public void testMemoryCache() {
-		MemoryCache memoryCache = new MemoryCache("test");
+	public void testLegacyCache() throws URISyntaxException {
+		LegacyCache legacyCache = new LegacyCache("test", null);
 
-		AlbumCache a = new AlbumCache();
-		a.id = 3;
-		a.url = "url";
-		memoryCache.parseContent(a.toString());
-		assertEquals(a.toString(), memoryCache.albumCache.toString());
+		AlbumCacheElement a = new AlbumCacheElement("url", 3);
+		legacyCache.parseContent(a.writeToString());
+		assertEquals(a.writeToString(), legacyCache.getAlbumCacheElement().writeToString());
 
-		PictureCache p = new PictureCache();
-		p.id = 3;
-		p.url = "url";
-		p.md5 = "md5";
-		memoryCache.parseContent(p.toString());
-		assertEquals(p.toString(), memoryCache.picturesCache.get(0).toString());
+		ImageCacheElement p = new ImageCacheElement("url", 3, "filePathMD5");
+		legacyCache.parseContent(p.writeToString());
+		assertEquals(p.writeToString(), legacyCache.getImagesCache().get(0).writeToString());
 	}
 
-	public void testFileCache() throws URISyntaxException {
+	public void testLegacyCache2() throws URISyntaxException {
 		assertTrue(getPiwigoImportTreeFile().exists());
-		FileCache fileCache = new FileCache(null, getPiwigoImportTreeFile());
-		fileCache.parseFile();
-		assertEquals(116, fileCache.albumCache.id.intValue());
-		assertEquals(20, fileCache.picturesCache.size());
-		assertEquals(502, fileCache.picturesCache.get(0).id.intValue());
-		assertEquals(521, fileCache.picturesCache.get(19).id.intValue());
-		assertEquals("d2d97dd5727972522adfd82f43daddcd", fileCache.picturesCache.get(1).md5);
+
+		LegacyCache legacyCache = new LegacyCache(null, getPiwigoImportTreeFile());
+		legacyCache.parseFile();
+		assertEquals(116, legacyCache.getAlbumCacheElement().getId().intValue());
+		assertEquals(20, legacyCache.getImagesCache().size());
+		assertEquals(502, legacyCache.getImagesCache().get(0).getId().intValue());
+		assertEquals(521, legacyCache.getImagesCache().get(19).getId().intValue());
+		assertEquals("d2d97dd5727972522adfd82f43daddcd", legacyCache.getImagesCache().get(1).getFilePathMD5());
 	}
 }

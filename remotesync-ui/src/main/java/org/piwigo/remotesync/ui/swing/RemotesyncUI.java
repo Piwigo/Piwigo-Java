@@ -27,8 +27,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 
-import org.piwigo.remotesync.api.conf.ConfigUtil;
-import org.piwigo.remotesync.api.conf.GalleryConfig;
+import org.piwigo.remotesync.api.conf.ConfigurationUtil;
+import org.piwigo.remotesync.api.conf.SyncConfiguration;
 import org.piwigo.remotesync.api.sync.SyncJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class RemotesyncUI {
 	private JTextArea textArea;
 	private JButton proxyButton;
 
-	private GalleryConfig config = ConfigUtil.INSTANCE.getUserConfig().getCurrentGalleryConfig();
+	private SyncConfiguration syncConfiguration = ConfigurationUtil.INSTANCE.getUserConfiguration().getCurrentSyncConfiguration();
 	private JScrollPane scrollPane;
 
 	/**
@@ -70,7 +70,7 @@ public class RemotesyncUI {
 					window.frame.addWindowListener(new WindowAdapter(){
 			            public void windowClosing(WindowEvent e){
 			            	window.save();
-			            	ConfigUtil.INSTANCE.saveUserConfig();
+			            	ConfigurationUtil.INSTANCE.saveUserConfig();
 			            }
 			        });
 					
@@ -198,7 +198,7 @@ public class RemotesyncUI {
 
 	protected void proxy() {
 		logger.debug("RemotesyncUI proxy button pressed");
-		ProxyUI.run(config);
+		ProxyUI.run(syncConfiguration);
 	}
 
 	protected void selectDirectory() {
@@ -226,16 +226,16 @@ public class RemotesyncUI {
 	}
 	
 	protected void load() {
-		urlText.setText(config.getUrl());
-		usernameText.setText(config.getUsername());
-		passwordText.setText(config.getPassword());
-		directoryText.setText(config.getDirectory());
+		urlText.setText(syncConfiguration.getUrl());
+		usernameText.setText(syncConfiguration.getUsername());
+		passwordText.setText(syncConfiguration.getPassword());
+		directoryText.setText(syncConfiguration.getDirectory());
 	}
 
 	protected void save() {
-		config.setUrl(urlText.getText());
-		config.setUsername(usernameText.getText());
-		config.setPassword(passwordText.getText());
-		config.setDirectory(directoryText.getText());
+		syncConfiguration.setUrl(urlText.getText());
+		syncConfiguration.setUsername(usernameText.getText());
+		syncConfiguration.setPassword(passwordText.getText());
+		syncConfiguration.setDirectory(directoryText.getText());
 	}
 }

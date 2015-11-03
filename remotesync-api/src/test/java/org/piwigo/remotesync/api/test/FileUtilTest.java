@@ -18,46 +18,53 @@ import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.piwigo.remotesync.api.util.FileUtil;
+import org.piwigo.remotesync.generator.Generated;
 
 public class FileUtilTest extends AbstractTestCase {
 	public void testMD5Sum() throws IOException, URISyntaxException {
-		assertEquals("6c73caff0ed3241365058f0a7f82d7d2", FileUtil.getMD5Sum(getPictureFile()));
+		assertEquals("6c73caff0ed3241365058f0a7f82d7d2", FileUtil.getFileContentMD5Sum(getImageFile()));
+		assertEquals("0d5b1c4c7f720f698946c7f6ab08f687", FileUtil.getFileNameMD5Sum(getImageFile()));
 	}
 	
 	public void testChunkNumber() throws URISyntaxException {
-		assertEquals(1, FileUtil.getChunkNumber(getPictureFile(), Integer.MAX_VALUE));
-		assertEquals(3, FileUtil.getChunkNumber(getPictureFile(), (int) (getPictureFile().length() / 2 - 1)));
+		assertEquals(1, FileUtil.getChunkNumber(getImageFile(), Integer.MAX_VALUE));
+		assertEquals(3, FileUtil.getChunkNumber(getImageFile(), (int) (getImageFile().length() / 2 - 1)));
 	}
 	
 	public void testChunkSize() throws URISyntaxException {
-		assertEquals((int) getPictureFile().length(), FileUtil.getChunkSize(getPictureFile(), (int) getPictureFile().length(), 0));
-		assertEquals(1, FileUtil.getChunkSize(getPictureFile(), 1, 0));
-		assertEquals(1, FileUtil.getChunkSize(getPictureFile(), (int) getPictureFile().length() - 1, 1));
+		assertEquals((int) getImageFile().length(), FileUtil.getChunkSize(getImageFile(), (int) getImageFile().length(), 0));
+		assertEquals(1, FileUtil.getChunkSize(getImageFile(), 1, 0));
+		assertEquals(1, FileUtil.getChunkSize(getImageFile(), (int) getImageFile().length() - 1, 1));
 	}
 
 	public void testChunkSizeAndNumber() throws URISyntaxException {
 		int chunkSize = 123;
-		int chunkNumber = FileUtil.getChunkNumber(getPictureFile(), chunkSize);
+		int chunkNumber = FileUtil.getChunkNumber(getImageFile(), chunkSize);
 		long total = 0;
 		for  (int i = 0 ; i < chunkNumber ; i++) {
-			int actualChunkSize = FileUtil.getChunkSize(getPictureFile(), chunkSize, i);
+			int actualChunkSize = FileUtil.getChunkSize(getImageFile(), chunkSize, i);
 			assertTrue(actualChunkSize > 0);
 			total += actualChunkSize;
 		}
-		assertEquals(getPictureFile().length(), total);
+		assertEquals(getImageFile().length(), total);
 	}
 	
 	public void testFilePart() throws IOException, URISyntaxException {
 		int chunkSize = 456;
-		int chunkNumber = FileUtil.getChunkNumber(getPictureFile(), chunkSize);
+		int chunkNumber = FileUtil.getChunkNumber(getImageFile(), chunkSize);
 		byte[] result = new byte[0];
 		for  (int i = 0 ; i < chunkNumber ; i++)
-			result = ArrayUtils.addAll(result, FileUtil.getFilePart(getPictureFile(), chunkSize, i));
-		assertTrue(Arrays.equals(IOUtils.toByteArray(new FileInputStream(getPictureFile())), result));
+			result = ArrayUtils.addAll(result, FileUtil.getFilePart(getImageFile(), chunkSize, i));
+		assertTrue(Arrays.equals(IOUtils.toByteArray(new FileInputStream(getImageFile())), result));
 	}
 	
 	public void testIsImage() throws URISyntaxException  {
-		assertTrue(FileUtil.isImage(getPictureFile()));
+		assertTrue(FileUtil.isImage(getImageFile()));
 		assertFalse(FileUtil.isImage(getPiwigoImportTreeFile()));
+	}
+	
+	public void testResources() {
+		assertNull(FileUtil.getFile(this.getClass(), "apiTemplate.jmte"));
+		assertNotNull(FileUtil.getFile(Generated.class, "apiTemplate.jmte"));
 	}
 }

@@ -8,7 +8,7 @@
   Contributors:
       Matthieu Helleboid - initial API and implementation
 -->
-<remotesync:GalleryConfigForm xmlns:bxml="http://pivot.apache.org/bxml"
+<remotesync:SyncConfigurationForm xmlns:bxml="http://pivot.apache.org/bxml"
 	xmlns:remotesync="org.piwigo.remotesync.ui.pivot" xmlns:validation="org.apache.pivot.wtk.validation"
 	xmlns="org.apache.pivot.wtk">
 	<TablePane styles="{padding:6}">
@@ -18,7 +18,7 @@
 		<TablePane.Row height="1*">	
 			<Form bxml:id="form">
 				<Form.Section>
-					<ListButton bxml:id="configListButton"/>
+					<ListButton bxml:id="configurationListButton"/>
 				</Form.Section>
 				<Form.Section heading="Gallery">
 					<TextInput bxml:id="urlTextInput" textKey="url" textSize="40" Form.label="Remote Url" prompt="http://mygallery.piwigo.com">
@@ -96,4 +96,4 @@
 			</TablePane>
 		</TablePane.Row>
 	</TablePane>
-</remotesync:GalleryConfigForm>
+</remotesync:SyncConfigurationForm>

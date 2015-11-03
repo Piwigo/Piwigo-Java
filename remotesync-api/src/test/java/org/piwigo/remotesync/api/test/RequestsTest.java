@@ -86,7 +86,7 @@ public class RequestsTest extends AbstractTestCase {
 	public void testCategories() throws ClientServerException, URISyntaxException {
 		PwgCategoriesAddResponse categoryResponse = getClient().sendRequest(new PwgCategoriesAddRequest("test"));
 		PwgCategoriesAddResponse categoryResponse2 = getClient().sendRequest(new PwgCategoriesAddRequest("test2"));
-		PwgImagesAddSimpleResponse imageResponse = getClient().sendRequest(new PwgImagesAddSimpleRequest(getPictureFile()).setCategory(categoryResponse.id));
+		PwgImagesAddSimpleResponse imageResponse = getClient().sendRequest(new PwgImagesAddSimpleRequest(getImageFile()).setCategory(categoryResponse.id));
 		
 		try {
 			PwgCategoriesAddResponse category = getClient().sendRequest(new PwgCategoriesAddRequest("newcat"));
@@ -166,7 +166,7 @@ public class RequestsTest extends AbstractTestCase {
 		API api = new API(getClient());
 		
 		String tagName = "imagetag" + new Date().toString();
-		PwgImagesAddSimpleResponse imageResponse = getClient().sendRequest(new PwgImagesAddSimpleRequest(getPictureFile()).setTags(tagName));
+		PwgImagesAddSimpleResponse imageResponse = getClient().sendRequest(new PwgImagesAddSimpleRequest(getImageFile()).setTags(tagName));
 		
 		try {
 			api.tagsAdd(new PwgTagsAddRequest("alonetag" + new Date().toString()));

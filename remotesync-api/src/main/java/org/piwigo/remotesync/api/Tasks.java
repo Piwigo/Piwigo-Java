@@ -26,7 +26,5 @@ public class Tasks {
 	//TODO implement request text : connecting to / uploading file
 	//TODO implement pause/retry/save of composedrequest
 	
-	//TODO provide API to create client from galleryconfig
-	
 	//TODO test upload with community plugin
 }

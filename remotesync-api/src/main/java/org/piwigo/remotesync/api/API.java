@@ -12,7 +12,6 @@ package org.piwigo.remotesync.api;
 
 import org.piwigo.remotesync.api.AbstractAPI;
 import org.piwigo.remotesync.api.client.AuthenticatedWSClient;
-import org.piwigo.remotesync.api.client.Client;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.PwgImagesAddAllChunksRequest;
 import org.piwigo.remotesync.api.request.PwgImagesAddFileWithChunkRequest;
@@ -24,18 +23,18 @@ import org.piwigo.remotesync.api.response.PwgImagesAddResponse;
 
 public class API extends AbstractAPI {
 
-	protected Client client;
+	protected IClient client;
 
-	public API(Client client) {
+	public API(IClient client) {
 		this.client = client;
 	}
 
-	public API(String url) {
-		this.client = new AuthenticatedWSClient(url);
+	public API(IClientConfiguration clientConfiguration) {
+		this.client = new AuthenticatedWSClient(clientConfiguration);
 	}
 	
-	public void login(String username, String password) throws ClientServerException {
-		client.login(username, password);
+	public void login() throws ClientServerException {
+		client.login();
 	}
 
 	public void logout() throws ClientServerException {
@@ -43,7 +42,7 @@ public class API extends AbstractAPI {
 	}
 
 	@Override
-	protected Client getClient() {
+	protected IClient getClient() {
 		return client;
 	}
 	

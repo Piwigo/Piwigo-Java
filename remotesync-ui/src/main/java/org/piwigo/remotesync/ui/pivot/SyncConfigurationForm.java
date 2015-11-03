@@ -40,16 +40,17 @@ import org.apache.pivot.wtk.TextInput;
 import org.apache.pivot.wtk.content.ListButtonDataRenderer;
 import org.apache.pivot.wtk.content.ListViewItemRenderer;
 import org.apache.pivot.wtk.validation.Validator;
-import org.piwigo.remotesync.api.conf.Config;
-import org.piwigo.remotesync.api.conf.ConfigUtil;
-import org.piwigo.remotesync.api.conf.GalleryConfig;
-import org.piwigo.remotesync.api.conf.GalleryConfigValidator;
-import org.piwigo.remotesync.api.conf.GalleryConfigValidator.GalleryValidationException;
+import org.piwigo.remotesync.api.conf.UserConfiguration;
+import org.piwigo.remotesync.api.ISyncConfiguration;
+import org.piwigo.remotesync.api.conf.ConfigurationUtil;
+import org.piwigo.remotesync.api.conf.SyncConfiguration;
+import org.piwigo.remotesync.api.conf.SyncConfigurationValidator;
+import org.piwigo.remotesync.api.conf.SyncConfigurationValidator.SyncValidationException;
 
-public class GalleryConfigForm extends Border implements Bindable {
+public class SyncConfigurationForm extends Border implements Bindable {
 	@BXML private Form form;
 	
-	@BXML private ListButton configListButton;
+	@BXML private ListButton configurationListButton;
 
 	@BXML private TextInput urlTextInput;
 	@BXML private TextInput loginTextInput;
@@ -102,23 +103,23 @@ public class GalleryConfigForm extends Border implements Bindable {
 			accessor.component.getComponentStateListeners().add(componentStateListener);
 		}
 		
-		configListButton.setItemRenderer(new ListViewItemRenderer() {
+		configurationListButton.setItemRenderer(new ListViewItemRenderer() {
 			@Override
 			public String toString(Object item) {
-				if (item instanceof GalleryConfig) {
-					GalleryConfig galleryConfig = (GalleryConfig) item;
-					return galleryConfig.getUsername() + "@" + galleryConfig.getUrl();
+				if (item instanceof SyncConfiguration) {
+					ISyncConfiguration syncConfiguration = (ISyncConfiguration) item;
+					return syncConfiguration.getUsername() + "@" + syncConfiguration.getUrl();
 				}
 				return super.toString(item);
 			}
 		});
 		
-		configListButton.setDataRenderer(new ListButtonDataRenderer() {
+		configurationListButton.setDataRenderer(new ListButtonDataRenderer() {
 			@Override
 			public String toString(Object data) {
-				if (data instanceof GalleryConfig) {
-					GalleryConfig galleryConfig = (GalleryConfig) data;
-					return galleryConfig.getUsername() + "@" + galleryConfig.getUrl();
+				if (data instanceof SyncConfiguration) {
+					ISyncConfiguration syncConfiguration = (ISyncConfiguration) data;
+					return syncConfiguration.getUsername() + "@" + syncConfiguration.getUrl();
 				}
 				return super.toString(data);
 			}
@@ -156,7 +157,7 @@ public class GalleryConfigForm extends Border implements Bindable {
 				while (rootDirectory != null && !rootDirectory.exists() && !rootDirectory.isDirectory())
 					rootDirectory = rootDirectory.getParentFile();
 				if (rootDirectory == null)
-					return ConfigUtil.INSTANCE.getUserCurrentDirectory();
+					return ConfigurationUtil.INSTANCE.getUserCurrentDirectory();
 				return rootDirectory;
 			}
 		});
@@ -180,7 +181,7 @@ public class GalleryConfigForm extends Border implements Bindable {
 		reloadButton.getButtonPressListeners().add(new ButtonPressListener() {
             @Override
             public void buttonPressed(Button button) {
-            	ConfigUtil.INSTANCE.loadUserConfig();
+            	ConfigurationUtil.INSTANCE.loadUserConfig();
             	loadAccessors();
             }
         });
@@ -198,27 +199,27 @@ public class GalleryConfigForm extends Border implements Bindable {
 	}
 	
 	public void loadAccessors() {
-		Config config = ConfigUtil.INSTANCE.getUserConfig();
-		GalleryConfig galleryConfig = config.getCurrentGalleryConfig();
+		UserConfiguration userConfiguration = ConfigurationUtil.INSTANCE.getUserConfiguration();
+		SyncConfiguration syncConfiguration = userConfiguration.getCurrentSyncConfiguration();
 		
-		configListButton.setListData(new ListAdapter<GalleryConfig>(config.getGalleryConfigs()));
-		configListButton.setSelectedItem(galleryConfig);
+		configurationListButton.setListData(new ListAdapter<SyncConfiguration>(userConfiguration.getSyncConfigurations()));
+		configurationListButton.setSelectedItem(syncConfiguration);
 
 		for (FieldAccessor<? extends Component> accessor : accessors) {
-			accessor.setValue(galleryConfig.getValue(accessor.getFieldName()));
+			accessor.setValue(syncConfiguration.getValue(accessor.getFieldName()));
 		}
 		updateChunkSizeLabel();
 		updateProxyState();
 	}
 	
 	public void saveAccessors() {
-		Config config = ConfigUtil.INSTANCE.getUserConfig();
-		GalleryConfig galleryConfig = config.getCurrentGalleryConfig();
+		UserConfiguration userConfiguration = ConfigurationUtil.INSTANCE.getUserConfiguration();
+		SyncConfiguration syncConfiguration = userConfiguration.getCurrentSyncConfiguration();
 
 		
 		
 		for (FieldAccessor<? extends Component> accessor : accessors) {
-			galleryConfig.setValue(accessor.getFieldName(), accessor.getValue());
+			syncConfiguration.setValue(accessor.getFieldName(), accessor.getValue());
 		}
 	}
 	
@@ -228,8 +229,8 @@ public class GalleryConfigForm extends Border implements Bindable {
 
 		for (FieldAccessor<? extends Component> accessor : accessors) {
 			try {
-				GalleryConfigValidator.INSTANCE.validate(accessor.getFieldName(), accessor.getValue(), proxyCheckbox.isSelected());
-			} catch (GalleryValidationException e) {
+				SyncConfigurationValidator.INSTANCE.validate(accessor.getFieldName(), accessor.getValue(), proxyCheckbox.isSelected());
+			} catch (SyncValidationException e) {
 				Component component = accessor.getComponent();
     			if (component.isEnabled() && component.isVisible() && component instanceof TextInput) {
     				TextInput input = (TextInput) component;

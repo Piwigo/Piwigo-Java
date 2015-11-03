@@ -12,8 +12,11 @@ package org.piwigo.remotesync.api.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.URL;
+import java.net.URLDecoder;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -21,9 +24,13 @@ import org.apache.commons.io.IOUtils;
 import org.piwigo.remotesync.api.exception.IORuntimeException;
 import org.piwigo.remotesync.api.type.Type;
 import org.piwigo.remotesync.api.type.ValueValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileUtil {
-	public static String getMD5Sum(File file) {
+	private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
+
+	public static String getFileContentMD5Sum(File file) {
 		FileInputStream fileInputStream = null;
 		try {
 			fileInputStream = new FileInputStream(file);
@@ -33,6 +40,10 @@ public class FileUtil {
 		} finally {
 			IOUtils.closeQuietly(fileInputStream);
 		}
+	}
+
+	public static String getFileNameMD5Sum(File file) {
+		return DigestUtils.md5Hex(file.getName());
 	}
 
 	public static boolean isImage(File file) {
@@ -84,6 +95,30 @@ public class FileUtil {
 	 */
 	public static String getBase64String(File file, int chunkSize, int chunkNumber) {
 		return Base64.encodeBase64String(getFilePart(file, chunkSize, chunkNumber));
+	}
+
+	public static File getFile(Class<?> clazz, String resourceName) {
+		return getFile(clazz, resourceName, true);
+	}
+
+	public static File getFile(Class<?> clazz, String resourceName, boolean checkExistence) {
+		try {
+			URL resource = clazz.getResource(resourceName);
+			
+			if (resource == null) 
+				throw new IllegalStateException("Unable to find resource with name " + resourceName);
+
+			String filePath = URLDecoder.decode(resource.getPath(), "UTF-8");
+
+			File file = new File(filePath);
+			if (checkExistence && !file.exists())
+				throw new FileNotFoundException("Unable to find file with name " + resourceName);
+
+			return file;
+		} catch (Exception exception) {
+			logger.error(exception.getMessage(), exception);
+			return null;
+		}
 	}
 
 }

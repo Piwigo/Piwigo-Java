@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.piwigo.remotesync.api.client;
 
+import org.piwigo.remotesync.api.IClient;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.AbstractRequest;
 import org.piwigo.remotesync.api.response.BasicResponse;
@@ -35,13 +36,13 @@ public class DryRunClient extends AbstractClient {
 	}
 
 	@Override
-	public Client login(String username, String password) {
+	public IClient login() {
 		logger.info("DryRun login");
 		return this;
 	}
 
 	@Override
-	public Client logout() {
+	public IClient logout() {
 		logger.info("DryRun logout");
 		return this;
 	}

@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,20 +28,23 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.piwigo.remotesync.api.client.Client;
+import org.piwigo.remotesync.api.IClient;
+import org.piwigo.remotesync.api.IClientConfiguration;
 import org.piwigo.remotesync.api.client.WSClient;
+import org.piwigo.remotesync.api.conf.ConfigurationUtil;
 import org.piwigo.remotesync.api.reflection.ReflectionCustomization;
 import org.piwigo.remotesync.api.request.ReflectionGetMethodDetailsRequest;
 import org.piwigo.remotesync.api.request.ReflectionGetMethodListRequest;
 import org.piwigo.remotesync.api.response.ReflectionGetMethodDetailsResponse;
 import org.piwigo.remotesync.api.response.ReflectionGetMethodDetailsResponse.Parameter;
+import org.piwigo.remotesync.api.util.FileUtil;
 import org.piwigo.remotesync.api.xml.PersisterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.Level;
-
 import com.floreysoft.jmte.Engine;
+
+import ch.qos.logback.classic.Level;
 
 public class WSJavaAPIWriter {
 
@@ -86,8 +88,8 @@ public class WSJavaAPIWriter {
 		logger.info("Generation finished");
 	}
 
-	private String projectPath;
-	private String url;
+	protected File projectFile;
+	protected String url;
 
 	protected void writeAPI(boolean refresh) throws Exception {
 		List<ReflectionGetMethodDetailsResponse> methodDetails = null;
@@ -160,12 +162,14 @@ public class WSJavaAPIWriter {
 
 	protected WSJavaAPIWriter(String url) {
 		this.url = url;
-		URL resource = WSJavaAPIWriter.class.getResource(WSJavaAPIWriter.class.getSimpleName() + ".class");
-		this.projectPath = resource.getPath().replaceAll("remotesync-api.*", "remotesync-api");
+		File file = FileUtil.getFile(this.getClass(), this.getClass().getSimpleName() + ".class");
+		projectFile = new File(file.getAbsolutePath().replaceAll("remotesync-api.*", "remotesync-api"));
+		assert(projectFile.exists());
 	}
 
 	protected List<ReflectionGetMethodDetailsResponse> getMethodDetailsFromWS() throws Exception {
-		Client client = new WSClient(url);
+		IClientConfiguration createConfiguration = ConfigurationUtil.INSTANCE.createConfiguration(url);
+		IClient client = new WSClient(createConfiguration);
 
 		logger.info("get WS methods");
 		List<ReflectionGetMethodDetailsResponse> methodDetailsResponses = new ArrayList<ReflectionGetMethodDetailsResponse>();
@@ -226,7 +230,7 @@ public class WSJavaAPIWriter {
 	}
 
 	protected File getProjectFile() {
-		return new File(projectPath);
+		return projectFile;
 	}
 
 	protected File getMainJavaFile(String filePath) {

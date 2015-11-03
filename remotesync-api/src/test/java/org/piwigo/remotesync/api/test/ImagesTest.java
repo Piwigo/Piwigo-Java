@@ -12,7 +12,7 @@ package org.piwigo.remotesync.api.test;
 
 import java.io.File;
 
-import org.piwigo.remotesync.api.client.Client;
+import org.piwigo.remotesync.api.IClient;
 import org.piwigo.remotesync.api.request.PwgCategoriesAddRequest;
 import org.piwigo.remotesync.api.request.PwgCategoriesDeleteRequest;
 import org.piwigo.remotesync.api.request.PwgImagesAddSimpleRequest;
@@ -25,8 +25,8 @@ import org.piwigo.remotesync.api.response.PwgImagesAddSimpleResponse;
 
 public class ImagesTest extends AbstractTestCase {
 	public void testAddSimple() throws Exception {
-		Client client = getClient();
-		File image = getPictureFile();
+		IClient client = getClient();
+		File image = getImageFile();
 		PwgCategoriesAddResponse categoryResponse = client.sendRequest(new PwgCategoriesAddRequest("test"));
 		PwgImagesAddSimpleResponse imageResponse = client.sendRequest(new PwgImagesAddSimpleRequest(image).setCategory(categoryResponse.id));
 		client.sendRequest(new PwgImagesDeleteRequest(imageResponse.image_id));
@@ -34,8 +34,8 @@ public class ImagesTest extends AbstractTestCase {
 	}
 
 	public void testAddWithChunk() throws Exception {
-		Client client = getClient();
-		File image = getPictureFile();
+		IClient client = getClient();
+		File image = getImageFile();
 		PwgCategoriesAddResponse categoryResponse = client.sendRequest(new PwgCategoriesAddRequest("test"));
 		ComposedResponse<PwgImagesAddResponse> composedResponse = client.sendRequest(new PwgImagesAddWithChunkRequest(image).setCategories(categoryResponse.id + ""));
 		PwgImagesAddResponse imagesAddResponse = composedResponse.getResponse();

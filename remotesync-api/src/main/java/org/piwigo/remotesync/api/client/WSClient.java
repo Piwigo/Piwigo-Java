@@ -17,13 +17,21 @@ import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.piwigo.remotesync.api.IClient;
+import org.piwigo.remotesync.api.IClientConfiguration;
 import org.piwigo.remotesync.api.exception.ClientException;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.exception.ServerException;
@@ -47,11 +55,12 @@ public class WSClient extends AbstractClient {
 
 	private static Logger logger = LoggerFactory.getLogger(WSClient.class);
 
-	private String url;
-	private CloseableHttpClient httpClient;
+	protected IClientConfiguration clientConfiguration;
+	protected CloseableHttpClient httpClient;
+	protected RequestConfig requestConfig;
 
-	public WSClient(String url) {
-		this.url = url;
+	public WSClient(IClientConfiguration clientConfiguration) {
+		this.clientConfiguration = clientConfiguration;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -59,12 +68,32 @@ public class WSClient extends AbstractClient {
 	protected <T extends BasicResponse> T doSendRequest(AbstractRequest<T> request) throws ClientServerException {
 		checkRequestAuthorization(request);
 
-		if (httpClient == null)
-			httpClient = HttpClients.createDefault();
+		if (httpClient == null) {
+			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+
+			if (clientConfiguration.getUsesProxy()) {
+				String proxyUrl = clientConfiguration.getProxyUrl();
+				int proxyPort = clientConfiguration.getProxyPort();
+				
+				String proxyUsername = clientConfiguration.getProxyUsername();
+				String proxyPassword = clientConfiguration.getProxyPassword();
+
+				if (proxyUsername != null && proxyUsername.length() > 0 && proxyPassword != null && proxyPassword.length() > 0) {
+					CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+					credentialsProvider.setCredentials(new AuthScope(proxyUrl, proxyPort), new UsernamePasswordCredentials(proxyUsername, proxyPassword));
+					httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+				}
+
+				HttpHost proxy = new HttpHost(proxyUrl, proxyPort);
+				requestConfig = RequestConfig.custom().setProxy(proxy).build();
+			}
+			httpClient = httpClientBuilder.build();
+		}
 
 		CloseableHttpResponse httpResponse = null;
 		try {
-			HttpPost method = new HttpPost(url + "/ws.php");
+			HttpPost method = new HttpPost(clientConfiguration.getUrl() + "/ws.php");
+			method.setConfig(requestConfig);
 
 			MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
 			multipartEntityBuilder.addTextBody("method", request.getWSMethodName());
@@ -143,12 +172,12 @@ public class WSClient extends AbstractClient {
 	}
 
 	@Override
-	public Client login(String username, String password) throws ClientServerException {
+	public IClient login() throws ClientServerException {
 		throw new IllegalStateException("Cannot login, use " + AuthenticatedWSClient.class.getName());
 	}
 
 	@Override
-	public Client logout() throws ClientServerException {
+	public IClient logout() throws ClientServerException {
 		throw new IllegalStateException("Cannot logout, use " + AuthenticatedWSClient.class.getName());
 	}
 }

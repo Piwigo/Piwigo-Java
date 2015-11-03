@@ -12,56 +12,49 @@ package org.piwigo.remotesync.api.test;
 
 import java.io.File;
 import java.net.URISyntaxException;
-import java.net.URL;
 
-import junit.framework.TestCase;
-
+import org.piwigo.remotesync.api.IClient;
+import org.piwigo.remotesync.api.ISyncConfiguration;
+import org.piwigo.remotesync.api.cache.LegacyCache;
 import org.piwigo.remotesync.api.client.AuthenticatedWSClient;
-import org.piwigo.remotesync.api.client.Client;
-import org.piwigo.remotesync.api.conf.Config;
-import org.piwigo.remotesync.api.conf.ConfigUtil;
-import org.piwigo.remotesync.api.conf.GalleryConfig;
+import org.piwigo.remotesync.api.conf.ConfigurationUtil;
+import org.piwigo.remotesync.api.conf.UserConfiguration;
 import org.piwigo.remotesync.api.exception.ClientServerException;
-import org.piwigo.remotesync.api.sync.SyncCache;
-import org.slf4j.Logger;
+import org.piwigo.remotesync.api.util.FileUtil;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
+import junit.framework.TestCase;
 
 public abstract class AbstractTestCase extends TestCase {
 
-	private static final Logger logger = LoggerFactory.getLogger(AbstractTestCase.class);
-	
 	static {
 		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("ROOT")).setLevel(Level.INFO);
 	}
 	
-	private static Client client;
+	private static IClient client;
 
-	protected Client getClient() throws ClientServerException {
+	protected IClient getClient() throws ClientServerException {
 		if (client == null) {
-			GalleryConfig galleryConfig = getTestConfig().getCurrentGalleryConfig();
-			client = new AuthenticatedWSClient(galleryConfig.getUrl()).login(galleryConfig.getUsername(), galleryConfig.getPassword());
+			ISyncConfiguration syncConfiguration = getTestConfiguration().getCurrentSyncConfiguration();
+			client = new AuthenticatedWSClient(syncConfiguration).login();
 		}
 		return client;
 	}
 
-	protected Config getTestConfig() {
-		URL resource = AbstractTestCase.class.getResource("testConfig");
-		if (resource == null) {
-			IllegalStateException exception = new IllegalStateException("Unable to find testConfig file to configure tests, have a look at testConfig.example");
-			logger.error(exception.getMessage(), exception);
-			throw exception;
-		}
-		ConfigUtil.INSTANCE.loadConfig(new File(resource.getPath()));
-		return ConfigUtil.INSTANCE.getUserConfig();
+	protected UserConfiguration getTestConfiguration() {
+		File file = FileUtil.getFile(this.getClass(), "testConfig", false);
+		if (file == null)
+			throw new IllegalStateException("Unable to find testConfig file to configure tests, have a look at testConfig.example");;
+		ConfigurationUtil.INSTANCE.loadConfig(file);
+		return ConfigurationUtil.INSTANCE.getUserConfiguration();
 	}
 
-	protected File getPictureFile() throws URISyntaxException {
-		return new File(AbstractTestCase.class.getResource("picture.jpg").toURI());
+	protected File getImageFile() throws URISyntaxException {
+		return FileUtil.getFile(AbstractTestCase.class, "image.jpg");
 	}
 	
 	protected File getPiwigoImportTreeFile() throws URISyntaxException {
-		return new File(AbstractTestCase.class.getResource(SyncCache.LEGACY_CACHE_FILE_NAME).toURI());
+		return FileUtil.getFile(AbstractTestCase.class, LegacyCache.LEGACY_CACHE_FILE_NAME);
 	}
 }

@@ -31,9 +31,9 @@ import org.apache.pivot.wtk.Orientation;
 import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.SplitPane;
 import org.apache.pivot.wtk.TextArea;
+import org.piwigo.remotesync.api.ISyncConfiguration;
 import org.piwigo.remotesync.api.client.AuthenticatedWSClient;
-import org.piwigo.remotesync.api.conf.ConfigUtil;
-import org.piwigo.remotesync.api.conf.GalleryConfig;
+import org.piwigo.remotesync.api.conf.ConfigurationUtil;
 import org.piwigo.remotesync.api.reflection.MethodReflection;
 import org.piwigo.remotesync.api.reflection.ReflectiveRequest;
 import org.piwigo.remotesync.api.response.BasicResponse;
@@ -78,8 +78,8 @@ public class RequestForm extends SplitPane implements Bindable {
 					}
 					
 					if (client == null) {
-						GalleryConfig galleryConfig = ConfigUtil.INSTANCE.getUserConfig().getCurrentGalleryConfig();
-						client = new AuthenticatedWSClient(galleryConfig.getUrl()).login(galleryConfig.getUsername(), galleryConfig.getPassword());
+						ISyncConfiguration syncConfiguration = ConfigurationUtil.INSTANCE.getUserConfiguration().getCurrentSyncConfiguration();
+						client = new AuthenticatedWSClient(syncConfiguration).login();
 					}
 
 					BasicResponse response = client.sendRequest(request);

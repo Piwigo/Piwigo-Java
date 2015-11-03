@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.piwigo.remotesync.api.client;
 
+import org.piwigo.remotesync.api.IClientConfiguration;
 import org.piwigo.remotesync.api.exception.ClientException;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.AbstractRequest;
@@ -24,8 +25,8 @@ public class AuthenticatedWSClient extends WSClient {
 
 	private PwgSessionGetStatusResponse sessionGetStatusResponse;
 
-	public AuthenticatedWSClient(String url) {
-		super(url);
+	public AuthenticatedWSClient(IClientConfiguration clientConfiguration) {
+		super(clientConfiguration);
 	}
 
 	@Override
@@ -45,8 +46,8 @@ public class AuthenticatedWSClient extends WSClient {
 	}
 
 	@Override
-	public AuthenticatedWSClient login(String username, String password) throws ClientServerException {
-		doSendRequest(new PwgSessionLoginRequest(username, password));
+	public AuthenticatedWSClient login() throws ClientServerException {
+		doSendRequest(new PwgSessionLoginRequest(clientConfiguration.getUsername(), clientConfiguration.getPassword()));
 		return this;
 	}
 
