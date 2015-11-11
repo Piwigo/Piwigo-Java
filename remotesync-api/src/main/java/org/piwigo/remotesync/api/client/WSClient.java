@@ -18,7 +18,6 @@ import java.util.Map.Entry;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -36,7 +35,10 @@ import org.piwigo.remotesync.api.exception.ClientException;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.exception.ServerException;
 import org.piwigo.remotesync.api.request.AbstractRequest;
+import org.piwigo.remotesync.api.request.ComposedRequest;
+import org.piwigo.remotesync.api.request.IChunkable;
 import org.piwigo.remotesync.api.response.BasicResponse;
+import org.piwigo.remotesync.api.response.ComposedResponse;
 import org.piwigo.remotesync.api.response.ServerResponse;
 import org.piwigo.remotesync.api.xml.PersisterFactory;
 import org.slf4j.Logger;
@@ -48,8 +50,6 @@ import org.slf4j.LoggerFactory;
  * System.out.println(response.getStatusLine().getStatusCode());
  * System.out.println(response.getStatusLine().getReasonPhrase());
  * System.out.println(response.getStatusLine().toString());
- *
- * TODO handle proxy
  */
 public class WSClient extends AbstractClient {
 
@@ -63,34 +63,69 @@ public class WSClient extends AbstractClient {
 		this.clientConfiguration = clientConfiguration;
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends BasicResponse> T sendRequest(AbstractRequest<T> request) throws ClientServerException {
+		handleChunkable(request);
+		return super.sendRequest(request);
+	}
+	
+	@Override
+	public <T extends BasicResponse> ComposedResponse<T> sendRequest(ComposedRequest<T> composedRequest) throws ClientServerException {
+		handleChunkable(composedRequest);
+		return super.sendRequest(composedRequest);
+	}
+	
+	protected <T extends BasicResponse> void handleChunkable(AbstractRequest<T> request) {
+		if (request instanceof IChunkable)
+			((IChunkable) request).setChunkSize(clientConfiguration.getChunkSize());
+	}
+
 	@Override
 	protected <T extends BasicResponse> T doSendRequest(AbstractRequest<T> request) throws ClientServerException {
 		checkRequestAuthorization(request);
 
-		if (httpClient == null) {
-			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+		String content = getXmlResponse(request);
 
-			if (clientConfiguration.getUsesProxy()) {
-				String proxyUrl = clientConfiguration.getProxyUrl();
-				int proxyPort = clientConfiguration.getProxyPort();
-				
-				String proxyUsername = clientConfiguration.getProxyUsername();
-				String proxyPassword = clientConfiguration.getProxyPassword();
+		// basic parsing
+		ServerResponse errorResponse = parseResponse(content, ServerResponse.class, false);
 
-				if (proxyUsername != null && proxyUsername.length() > 0 && proxyPassword != null && proxyPassword.length() > 0) {
-					CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-					credentialsProvider.setCredentials(new AuthScope(proxyUrl, proxyPort), new UsernamePasswordCredentials(proxyUsername, proxyPassword));
-					httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-				}
-
-				HttpHost proxy = new HttpHost(proxyUrl, proxyPort);
-				requestConfig = RequestConfig.custom().setProxy(proxy).build();
-			}
-			httpClient = httpClientBuilder.build();
+		if ("ok".equals(errorResponse.status)) {
+			// complete parsing
+			T response = parseResponse(content, request.getReturnType(), true);
+			response.setXmlContent(content);
+			return response;
+		} else if ("fail".equals(errorResponse.status)) {
+			logger.debug(content);
+			throw new ServerException(errorResponse.error.toString());
+		} else {
+			throw new NotImplementedException();
 		}
+	}
 
+	protected <T extends BasicResponse> String getXmlResponse(AbstractRequest<T> request) throws ClientException, ServerException {
 		CloseableHttpResponse httpResponse = null;
+		
+		try {
+			httpResponse = getHttpResponse(request);
+
+			if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+				throw new ServerException(httpResponse.getStatusLine().getReasonPhrase() + " (code " + httpResponse.getStatusLine().getStatusCode() + ")");
+
+			return IOUtils.toString(httpResponse.getEntity().getContent(), "UTF-8");
+		} catch (Exception e) {
+			throw new ClientException("Unable to read response content", e);
+		} finally {
+			try {
+				if (httpResponse != null)
+					httpResponse.close();
+			} catch (IOException e) {
+				logger.error("cannot close post", e);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T extends BasicResponse> CloseableHttpResponse getHttpResponse(AbstractRequest<T> request) throws ClientException {
 		try {
 			HttpPost method = new HttpPost(clientConfiguration.getUrl() + "/ws.php");
 			method.setConfig(requestConfig);
@@ -115,46 +150,39 @@ public class WSClient extends AbstractClient {
 			}
 			method.setEntity(multipartEntityBuilder.build());
 
-			httpResponse = httpClient.execute(method);
+			return getHttpClient().execute(method);
 		} catch (Exception e) {
 			throw new ClientException("Unable to send request", e);
 		}
-
-		if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
-			throw new ServerException(httpResponse.getStatusLine().getReasonPhrase() + " (code " + httpResponse.getStatusLine().getStatusCode() + ")");
-
-		String content;
-		try {
-			content = IOUtils.toString(httpResponse.getEntity().getContent(), "UTF-8");
-		} catch (Exception e) {
-			throw new ClientException("Unable to read response content", e);
-		}
-
-		try {
-			if (httpResponse != null)
-				httpResponse.close();
-		} catch (IOException e) {
-			logger.error("cannot close post", e);
-		}
-
-		// basic parsing
-		ServerResponse errorResponse = parseResponse(httpResponse, content, ServerResponse.class, false);
-
-		if ("fail".equals(errorResponse.status)) {
-			logger.debug(content);
-			throw new ServerException(errorResponse.error.toString());
-		} else if (!"ok".equals(errorResponse.status))
-			throw new NotImplementedException();
-
-		// complete parsing
-		T response = parseResponse(httpResponse, content, request.getReturnType(), true);
-		response.setHttpStatusCode(httpResponse.getStatusLine().getStatusCode());
-		response.setXmlContent(content);
-
-		return response;
 	}
 
-	private <T extends BasicResponse> T parseResponse(HttpResponse httpResponse, String content, Class<T> type, boolean strict) throws ClientException {
+	protected CloseableHttpClient getHttpClient() {
+		if (httpClient == null) {
+			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+
+			if (clientConfiguration.getUsesProxy()) {
+				String proxyUrl = clientConfiguration.getProxyUrl();
+				int proxyPort = clientConfiguration.getProxyPort();
+				
+				String proxyUsername = clientConfiguration.getProxyUsername();
+				String proxyPassword = clientConfiguration.getProxyPassword();
+
+				if (proxyUsername != null && proxyUsername.length() > 0 && proxyPassword != null && proxyPassword.length() > 0) {
+					CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+					credentialsProvider.setCredentials(new AuthScope(proxyUrl, proxyPort), new UsernamePasswordCredentials(proxyUsername, proxyPassword));
+					httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+				}
+
+				HttpHost proxy = new HttpHost(proxyUrl, proxyPort);
+				requestConfig = RequestConfig.custom().setProxy(proxy).build();
+			}
+			httpClient = httpClientBuilder.build();
+		}
+		
+		return httpClient;
+	}
+
+	protected <T extends BasicResponse> T parseResponse(String content, Class<T> type, boolean strict) throws ClientException {
 		try {
 			return (T) PersisterFactory.createPersister().read(type, content, strict);
 		} catch (Exception e) {

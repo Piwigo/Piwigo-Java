@@ -18,7 +18,7 @@ import org.piwigo.remotesync.api.response.*;
 ${generatedComment}
 public abstract class ${apiName} {
 
-	protected abstract Client getClient();
+	protected abstract IClient getClient();
 	
 ${foreach methodDetails methodDetail}
 ${if !methodDetail.hasMandatoryParameters}

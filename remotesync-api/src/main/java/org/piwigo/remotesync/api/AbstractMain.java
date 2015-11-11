@@ -38,19 +38,22 @@ public abstract class AbstractMain {
 			createConfiguration(parsedSyncConfiguration);
 			
 			if (help) {
-				System.out.println("Piwigo Remote Sync : java -jar remotesync.jar");
-				cmdLineParser.printUsage(System.out);
+				help(cmdLineParser);
 				return;
 			}
 
 			start();
 		} catch (CmdLineException e) {
 			System.err.println(e.getMessage());
-			System.err.println("Piwigo Remote Sync : java -jar remotesync.jar");
-			cmdLineParser.printUsage(System.err);
-			System.err.println();
-			System.err.println(" Example: java -jar remotesync.jar" + cmdLineParser.printExample(OptionHandlerFilter.ALL));
+			System.err.flush();
+			help(cmdLineParser);
 		}
+	}
+
+	protected void help(CmdLineParser cmdLineParser) {
+		System.out.println("Piwigo Remote Sync (version " + getClass().getPackage().getImplementationVersion() + ") : java -jar remotesync.jar");
+		cmdLineParser.printUsage(System.out);
+		System.out.println("Example: java -jar remotesync.jar" + cmdLineParser.printExample(OptionHandlerFilter.ALL));
 	}
 
 	protected abstract void start();

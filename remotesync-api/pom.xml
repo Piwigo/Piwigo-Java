@@ -104,6 +104,8 @@
 					<archive>
 						<manifest>
 							<mainClass>org.piwigo.remotesync.api.Main</mainClass>
+			                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+			                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
 					</archive>
 				</configuration>
@@ -112,12 +114,17 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
+					<finalName>remotesync</finalName>
+					<outputDirectory>../remotesync/target/</outputDirectory>
+					<appendAssemblyId>false</appendAssemblyId>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<archive>
 						<manifest>
 							<mainClass>org.piwigo.remotesync.api.Main</mainClass>
+			                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+			                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
 					</archive>
 				</configuration>
@@ -136,7 +143,7 @@
 	<parent>
 		<groupId>piwigo</groupId>
 		<artifactId>remotesync</artifactId>
-		<version>0.0.7</version>
+		<version>0.0.8</version>
 		<relativePath>../remotesync</relativePath>
 	</parent>
 </project>

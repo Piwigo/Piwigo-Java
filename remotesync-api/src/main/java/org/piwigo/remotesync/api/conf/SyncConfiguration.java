@@ -13,6 +13,7 @@ package org.piwigo.remotesync.api.conf;
 import java.lang.reflect.Field;
 
 import org.kohsuke.args4j.Option;
+import org.piwigo.remotesync.api.Constants;
 import org.piwigo.remotesync.api.ISyncConfiguration;
 import org.piwigo.remotesync.api.conf.SyncConfigurationValidator.Validator;
 import org.piwigo.remotesync.api.conf.SyncConfigurationValidator.ValidatorRequired;
@@ -22,10 +23,6 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.convert.Convert;
 
 public class SyncConfiguration implements ISyncConfiguration {
-	private static final String DIRECTORY_DEFAULT = ConfigurationUtil.INSTANCE.getUserCurrentDirectory().getAbsolutePath();
-
-	private static final String CHUNK_SIZE_DEFAULT = "500";
-
 	@Element(required = false)
 	@Option(name = "-url", usage = "remote gallery url")
 	@Validator(type = ValidatorType.url, required = ValidatorRequired.yes)
@@ -46,7 +43,7 @@ public class SyncConfiguration implements ISyncConfiguration {
 	@Element(required = false)
 	@Option(name = "-dir", usage = "local directory path")
 	@Validator(type = ValidatorType.dir)
-	protected String directory = DIRECTORY_DEFAULT;
+	protected String directory = Constants.DIRECTORY_DEFAULT;
 
 	@Element(required = false)
 	@Option(name = "-proxy", usage = "use proxy")
@@ -76,7 +73,7 @@ public class SyncConfiguration implements ISyncConfiguration {
 	@Element(required = false)
 	@Option(name = "-cs", usage = "chunk size (in Kbytes)")
 	@Validator(type = ValidatorType.integer)
-	protected String chunkSize = CHUNK_SIZE_DEFAULT;
+	protected String chunkSize = Constants.CHUNK_SIZE_DEFAULT;
 
 	public String getValue(String fieldName) {
 		try {
@@ -180,7 +177,7 @@ public class SyncConfiguration implements ISyncConfiguration {
 		try {
 			return Integer.parseInt(chunkSize);
 		} catch (NumberFormatException e) {
-			return Integer.parseInt(CHUNK_SIZE_DEFAULT);
+			return Integer.parseInt(Constants.CHUNK_SIZE_DEFAULT);
 		}
 	}
 

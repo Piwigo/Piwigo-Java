@@ -20,9 +20,7 @@ public class BasicResponse {
 	@Attribute(name = "stat")
 	public String status;
 
-	private int httpStatusCode;
-
-	private String xmlContent;
+	protected String xmlContent;
 
 	public String getXmlContent() {
 		return xmlContent;
@@ -30,14 +28,6 @@ public class BasicResponse {
 
 	public void setXmlContent(String xmlContent) {
 		this.xmlContent = xmlContent;
-	}
-
-	public void setHttpStatusCode(int httpStatusCode) {
-		this.httpStatusCode = httpStatusCode;
-	}
-
-	public int getHttpStatusCode() {
-		return httpStatusCode;
 	}
 
 	@Override

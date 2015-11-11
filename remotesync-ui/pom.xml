@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>piwigo</groupId>
 			<artifactId>remotesync-api</artifactId>
-			<version>0.0.7</version>
+			<version>0.0.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.pivot</groupId>
@@ -34,6 +34,8 @@
 					<archive>
 						<manifest>
 							<mainClass>org.piwigo.remotesync.ui.MainUi</mainClass>
+			                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+			                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
 					</archive>
 				</configuration>
@@ -42,12 +44,17 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
+					<finalName>remotesync-ui</finalName>
+					<outputDirectory>../remotesync/target/</outputDirectory>
+					<appendAssemblyId>false</appendAssemblyId>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 					<archive>
 						<manifest>
 							<mainClass>org.piwigo.remotesync.ui.MainUi</mainClass>
+			                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+			                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
 					</archive>
 				</configuration>
@@ -66,7 +73,7 @@
 	<parent>
 		<groupId>piwigo</groupId>
 		<artifactId>remotesync</artifactId>
-		<version>0.0.7</version>
+		<version>0.0.8</version>
 		<relativePath>../remotesync</relativePath>
 	</parent>
 </project>

@@ -106,22 +106,30 @@ public class LegacyCache {
 
 	public LegacyCache parseContent(String content) {
 		Matcher matcher = ALBUM_PATTERN.matcher(content);
-		if (matcher.find()) {
-			albumCacheElement = new AlbumCacheElement();
-			albumCacheElement.url = matcher.group(1);
-			albumCacheElement.id = Integer.parseInt(matcher.group(2));
+		while (matcher.find()) {
+			if (isSameUrl(matcher.group(1))) {
+				albumCacheElement = new AlbumCacheElement();
+				albumCacheElement.url = matcher.group(1);
+				albumCacheElement.id = Integer.parseInt(matcher.group(2));
+			}
 		}
 
 		matcher = IMAGE_PATTERN.matcher(content);
 		while (matcher.find()) {
-			ImageCacheElement imageCacheElement = new ImageCacheElement();
-			imageCacheElement.url = matcher.group(1);
-			imageCacheElement.filePathMD5 = matcher.group(2);
-			imageCacheElement.id = Integer.parseInt(matcher.group(3));
-			imagesCache.add(imageCacheElement);
+			if (isSameUrl(matcher.group(1))) {
+				ImageCacheElement imageCacheElement = new ImageCacheElement();
+				imageCacheElement.url = matcher.group(1);
+				imageCacheElement.filePathMD5 = matcher.group(2);
+				imageCacheElement.id = Integer.parseInt(matcher.group(3));
+				imagesCache.add(imageCacheElement);
+			}
 		}
 
 		return this;
+	}
+
+	public boolean isSameUrl(String otherUrl) {
+		return url.replaceAll("https?", "").equals(otherUrl.replaceAll("https?", ""));
 	}
 
 	protected void writeToFile(ILegacyCacheElement abstractCacheElement) {

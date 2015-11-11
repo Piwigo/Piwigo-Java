@@ -22,13 +22,13 @@ import org.piwigo.remotesync.api.response.ComposedResponse;
 public abstract class AbstractClient implements IClient {
 
 	@Override
-	public final <T extends BasicResponse> T sendRequest(AbstractRequest<T> request) throws ClientServerException {
+	public <T extends BasicResponse> T sendRequest(AbstractRequest<T> request) throws ClientServerException {
 		return doSendRequest(request);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public final <T extends BasicResponse> ComposedResponse<T> sendRequest(ComposedRequest<T> composedRequest) throws ClientServerException {
+	public <T extends BasicResponse> ComposedResponse<T> sendRequest(ComposedRequest<T> composedRequest) throws ClientServerException {
 		ComposedResponse<T> composedResponse = new ComposedResponse<T>();
 		Iterator<AbstractRequest<? extends BasicResponse>> iterator = composedRequest.iterator();
 		while (iterator.hasNext()) {

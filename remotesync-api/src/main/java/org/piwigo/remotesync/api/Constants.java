@@ -17,6 +17,7 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
+import org.piwigo.remotesync.api.conf.ConfigurationUtil;
 
 public class Constants {
 	
@@ -40,5 +41,11 @@ public class Constants {
 		}
 
 	}
+
+	public static final String DIRECTORY_DEFAULT = ConfigurationUtil.INSTANCE.getUserCurrentDirectory().getAbsolutePath();
+
+	public static final String CHUNK_SIZE_DEFAULT = "500";
+
+	public static final int CHUNK_SIZE_INT_DEFAULT = Integer.parseInt(CHUNK_SIZE_DEFAULT);
 
 }

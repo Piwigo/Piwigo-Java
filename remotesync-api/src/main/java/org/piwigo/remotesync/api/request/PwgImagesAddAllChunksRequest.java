@@ -13,17 +13,16 @@ package org.piwigo.remotesync.api.request;
 import java.io.File;
 import java.util.Iterator;
 
-import org.piwigo.remotesync.api.conf.ConfigurationUtil;
+import org.piwigo.remotesync.api.Constants;
 import org.piwigo.remotesync.api.exception.ClientException;
-import org.piwigo.remotesync.api.request.PwgImagesAddChunkRequest;
 import org.piwigo.remotesync.api.response.BasicResponse;
 import org.piwigo.remotesync.api.util.FileUtil;
 
-public class PwgImagesAddAllChunksRequest extends ComposedRequest<BasicResponse> {
+public class PwgImagesAddAllChunksRequest extends ComposedRequest<BasicResponse> implements IChunkable {
 
 	private File file;
-	//TODO store it
-	private final int chunkSize = 1024 * ConfigurationUtil.INSTANCE.getUserConfiguration().getCurrentSyncConfiguration().getChunkSize();
+
+	private int chunkSize = Constants.CHUNK_SIZE_INT_DEFAULT;
 
 	public PwgImagesAddAllChunksRequest(File file) throws ClientException {
 		this.file = file;
@@ -31,7 +30,7 @@ public class PwgImagesAddAllChunksRequest extends ComposedRequest<BasicResponse>
 
 	@Override
 	public Iterator<AbstractRequest<? extends BasicResponse>> iterator() {
-		final int chunkNumber = FileUtil.getChunkNumber(file, chunkSize);
+		final int chunkNumber = FileUtil.getChunkNumber(file, getTechnicalChunkSize());
 		final String md5Sum = FileUtil.getFileContentMD5Sum(file);
 
 		return new ComposedRequestIterator(requests) {
@@ -45,9 +44,18 @@ public class PwgImagesAddAllChunksRequest extends ComposedRequest<BasicResponse>
 
 			@Override
 			public AbstractRequest<? extends BasicResponse> next() {
-				String data = FileUtil.getBase64String(file, chunkSize, chunkId);
+				String data = FileUtil.getBase64String(file, getTechnicalChunkSize(), chunkId);
 				return new PwgImagesAddChunkRequest(data, md5Sum, chunkId++);
 			}
 		};
+	}
+	
+	private int getTechnicalChunkSize() {
+		return 1024 * chunkSize;
+	}
+
+	@Override
+	public void setChunkSize(int chunkSize) {
+		this.chunkSize = chunkSize;
 	}
 }
