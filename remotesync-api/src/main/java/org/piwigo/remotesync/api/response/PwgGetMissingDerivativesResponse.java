@@ -10,6 +10,12 @@
  ******************************************************************************/
 package org.piwigo.remotesync.api.response;
 
-@org.piwigo.remotesync.generator.Generated
+import java.util.List;
+
+import org.simpleframework.xml.ElementList;
+
 public class PwgGetMissingDerivativesResponse extends PwgCommonResponse {
+
+	@ElementList(required=false)
+	public List<String> urls;
 }

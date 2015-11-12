@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 public abstract class AbstractTestCase extends TestCase {
 
 	static {
-		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("ROOT")).setLevel(Level.INFO);
+		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("ROOT")).setLevel(RemotesyncAPIAllTests.TEST_LOG_LEVEL);
 	}
 	
 	private static IClient client;

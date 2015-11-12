@@ -119,7 +119,7 @@ public class APITest extends AbstractTestCase {
 		doTestFakePasswordConverter("a");
 		doTestFakePasswordConverter("1");
 		doTestFakePasswordConverter("password");
-		doTestFakePasswordConverter("1234567890&й(-и_за)^$щ*,;:!?./§µ%MP");
+		doTestFakePasswordConverter("1234567890");
 	}
 
 	private void doTestFakePasswordConverter(String password) throws ParseException {

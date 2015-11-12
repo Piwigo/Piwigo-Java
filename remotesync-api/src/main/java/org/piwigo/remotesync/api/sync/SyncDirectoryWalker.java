@@ -81,7 +81,7 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 		walk(startDirectory, null);
 	}
 
-	protected abstract Integer createAlbum(File directory, Integer parentAlbumId);
+	protected abstract Integer createAlbum(File directory, Integer parentAlbumId) throws IOException;
 
-	protected abstract Integer createImage(File file, Integer albumId);
+	protected abstract Integer createImage(File file, Integer albumId) throws IOException;
 }

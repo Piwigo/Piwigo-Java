@@ -10,18 +10,20 @@
  ******************************************************************************/
 package org.piwigo.remotesync.api.test;
 
-import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.Level;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import ch.qos.logback.classic.Level;
 
 public class RemotesyncAPIAllTests extends TestCase {
 
+	//when using mvn
+	public static Level TEST_LOG_LEVEL = Level.INFO;
+
 	public static Test suite() {
-		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("ROOT")).setLevel(Level.DEBUG);
-		
+		//debug only when using suite
+		TEST_LOG_LEVEL = Level.DEBUG;
+
 		TestSuite suite = new TestSuite(RemotesyncAPIAllTests.class.getName());
 		// $JUnit-BEGIN$
 		suite.addTestSuite(FileUtilTest.class);

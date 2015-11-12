@@ -16,6 +16,7 @@ import java.util.Collection;
 
 import org.piwigo.remotesync.api.ISyncConfiguration;
 import org.piwigo.remotesync.api.client.AuthenticatedWSClient;
+import org.piwigo.remotesync.api.client.WSClient;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.PwgCategoriesAddRequest;
 import org.piwigo.remotesync.api.request.PwgImagesAddSimpleRequest;
@@ -33,6 +34,9 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 	}
 
 	protected void connect() throws IOException {
+		if (client != null)
+			return;
+		
 		try {
 			logger.info("Connecting... ");
 			client = new AuthenticatedWSClient(syncConfiguration).login();
@@ -45,9 +49,13 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 	}
 
 	protected void disconnect() {
+		if (client == null)
+			return;
+		
 		try {
 			logger.info("Disconnecting... ");
 			client.logout();
+			client = null;
 			logger.info("Disconnect successful");
 		} catch (ClientServerException e) {
 			logger.error("Unable to disconnect : " + e.getMessage());
@@ -57,8 +65,6 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 	@Override
 	protected void handleStart(File startDirectory, Collection<File> results) throws IOException {
 		super.handleStart(startDirectory, results);
-		//TODO only connect when needed
-		connect();
 	}
 
 	@Override
@@ -67,8 +73,11 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 		disconnect();
 	}
 
+
 	@Override
-	protected Integer createAlbum(File directory, Integer parentAlbumId) {
+	protected Integer createAlbum(File directory, Integer parentAlbumId) throws IOException {
+		connect();
+		
 		try {
 			return client.sendRequest(new PwgCategoriesAddRequest(directory.getName()).setParent(parentAlbumId)).id;
 		} catch (ClientServerException e) {
@@ -78,7 +87,9 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 	}
 
 	@Override
-	protected Integer createImage(File file, Integer albumId) {
+	protected Integer createImage(File file, Integer albumId) throws IOException {
+		connect();
+		
 		try {
 			PwgImagesAddSimpleRequest request = new PwgImagesAddSimpleRequest(file);
 			// FIXME should we upload an image without album?

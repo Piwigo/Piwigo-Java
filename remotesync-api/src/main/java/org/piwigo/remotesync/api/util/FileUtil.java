@@ -116,7 +116,7 @@ public class FileUtil {
 
 			return file;
 		} catch (Exception exception) {
-			logger.error(exception.getMessage(), exception);
+			logger.debug(exception.getMessage(), exception);
 			return null;
 		}
 	}
