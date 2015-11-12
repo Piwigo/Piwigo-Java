@@ -20,6 +20,7 @@ public class Tasks {
 	
 	//TODO return float/boolean/int instead of types
 	
+	//TODO implement debug option from UI 
 	//TODO implement progressmonitor
 	//TODO implement estimated time
 	//TODO implement allpaging

@@ -25,6 +25,9 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -156,7 +159,7 @@ public class WSClient extends AbstractClient {
 		}
 	}
 
-	protected CloseableHttpClient getHttpClient() {
+	protected CloseableHttpClient getHttpClient() throws Exception {
 		if (httpClient == null) {
 			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
@@ -176,6 +179,13 @@ public class WSClient extends AbstractClient {
 				HttpHost proxy = new HttpHost(proxyUrl, proxyPort);
 				requestConfig = RequestConfig.custom().setProxy(proxy).build();
 			}
+			
+			if (clientConfiguration.getIgnoreSelfSignedSSLCertificate()) {
+				SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
+				sslContextBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+			    httpClientBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContextBuilder.build()));
+			}
+
 			httpClient = httpClientBuilder.build();
 		}
 		

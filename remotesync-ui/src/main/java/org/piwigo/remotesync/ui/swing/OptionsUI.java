@@ -26,7 +26,7 @@ import javax.swing.event.ChangeListener;
 
 import org.piwigo.remotesync.api.conf.SyncConfiguration;
 
-public class ProxyUI extends JFrame {
+public class OptionsUI extends JFrame {
 
 	private static final long serialVersionUID = -7945236553585527567L;
 
@@ -36,12 +36,13 @@ public class ProxyUI extends JFrame {
 	private JTextField proxyLogintextField;
 	private JTextField proxyPasswordtextField;
 	private JCheckBox chckbxUseProxy;
+	private JCheckBox chckbxISSSC;
 
 	public static void run(final SyncConfiguration syncConfiguration) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProxyUI frame = new ProxyUI(syncConfiguration);
+					OptionsUI frame = new OptionsUI(syncConfiguration);
 					frame.chckbxUseProxy.setSelected(false);
 					frame.disableTextFields();
 					frame.setVisible(true);
@@ -57,7 +58,7 @@ public class ProxyUI extends JFrame {
 	 * 
 	 * @param syncConfiguration
 	 */
-	public ProxyUI(final SyncConfiguration syncConfiguration) {
+	public OptionsUI(final SyncConfiguration syncConfiguration) {
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -110,6 +111,10 @@ public class ProxyUI extends JFrame {
 		contentPane.add(proxyPasswordtextField);
 		proxyPasswordtextField.setColumns(10);
 
+		chckbxISSSC = new JCheckBox("Ignore self signed SSL certificates");
+		chckbxISSSC.setBounds(8, 170, 300, 23);
+		contentPane.add(chckbxISSSC);
+
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -119,6 +124,7 @@ public class ProxyUI extends JFrame {
 				syncConfiguration.setProxyPort(proxyPorttextField.getText());
 				syncConfiguration.setProxyUsername(proxyLogintextField.getText());
 				syncConfiguration.setProxyPassword(proxyPasswordtextField.getText());
+				syncConfiguration.setIgnoreSelfSignedSSLCertificate(Boolean.toString(chckbxISSSC.isSelected()));
 			}
 
 			@Override
@@ -129,6 +135,7 @@ public class ProxyUI extends JFrame {
 				proxyPorttextField.setText(syncConfiguration.getProxyPort() + "");
 				proxyLogintextField.setText(syncConfiguration.getProxyUsername());
 				proxyPasswordtextField.setText(syncConfiguration.getProxyPassword());
+				chckbxISSSC.setSelected(syncConfiguration.getIgnoreSelfSignedSSLCertificate());
 			}
 
 		});

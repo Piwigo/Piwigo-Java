@@ -50,7 +50,7 @@ public class RemotesyncUI {
 	private JButton syncButton;
 	private JButton directoryButton;
 	private JTextArea textArea;
-	private JButton proxyButton;
+	private JButton optionsButton;
 
 	private SyncConfiguration syncConfiguration = ConfigurationUtil.INSTANCE.getUserConfiguration().getCurrentSyncConfiguration();
 	private JScrollPane scrollPane;
@@ -167,14 +167,14 @@ public class RemotesyncUI {
 		frame.getContentPane().add(directoryText);
 		directoryText.setColumns(10);
 
-		proxyButton = new JButton("Proxy");
-		proxyButton.addActionListener(new ActionListener() {
+		optionsButton = new JButton("Options");
+		optionsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				proxy();
 			}
 		});
-		proxyButton.setBounds(25, 257, 94, 36);
-		frame.getContentPane().add(proxyButton);
+		optionsButton.setBounds(25, 257, 94, 36);
+		frame.getContentPane().add(optionsButton);
 
 		syncButton = new JButton("Sync");
 		syncButton.addActionListener(new ActionListener() {
@@ -198,7 +198,7 @@ public class RemotesyncUI {
 
 	protected void proxy() {
 		logger.debug("RemotesyncUI proxy button pressed");
-		ProxyUI.run(syncConfiguration);
+		OptionsUI.run(syncConfiguration);
 	}
 
 	protected void selectDirectory() {

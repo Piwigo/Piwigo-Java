@@ -9,12 +9,12 @@
 #     Matthieu Helleboid - initial API and implementation
 #-------------------------------------------------------------------------------
 
-#checkout remote sync
-svn checkout http://piwigo.org/svn/extensions/piwigo-remote-sync
-cd piwigo-remote-sync
+#install tools
+apt-get install git maven 
 
-#install build system
-apt-get install maven2
+#clone remote sync
+git clone https://github.com/Piwigo/Piwigo-Java.git
+cd Piwigo-Java
 
 #build remote sync without tests
 cd remotesync
