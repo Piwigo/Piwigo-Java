@@ -8,13 +8,26 @@
 
 # Requirements
 
-* A **Java** jre/jdk **6** or greater
-* A **Piwigo** working **installation**
+* A **Java** jre/jdk (version **6** or greater)
+* A **Piwigo** working **installation** (version **2.6** or greater)
 
 # Quick start
 
 1. **Download** the latest **remotesync-ui.jar** from https://github.com/Piwigo/Piwigo-Java/releases
 2. **Double click** on it (your Operating System should use your default Java installation to execute the application)
+
+# FAQ
+
+**Is there any documentation available**
+Not yet
+
+**What does "Sync" means**
+Right, it means "upload". This application will only upload new local images to your remote gallery
+
+# Troubleshooting
+
+Using a shell, start the application with
+`java -jar /tmp/remotesync-ui.jar -debug`
 
 # License
 
