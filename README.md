@@ -19,14 +19,18 @@
 # FAQ
 
 **Is there any documentation available**
+
 Not yet
 
+
 **What does "Sync" means**
+
 Right, it means "upload". This application will only upload new local images to your remote gallery
 
 # Troubleshooting
 
 Using a shell, start the application with
+
 `java -jar /tmp/remotesync-ui.jar -debug`
 
 # License
