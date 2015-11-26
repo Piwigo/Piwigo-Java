@@ -22,7 +22,7 @@ public interface IClientConfiguration {
 	public String getProxyUsername();
 	public String getProxyPassword();
 	
-	public boolean getIgnoreSelfSignedSSLCertificate();
+	public boolean getTrustSelfSignedSSLCertificate();
 
 	public int getChunkSize();
 }

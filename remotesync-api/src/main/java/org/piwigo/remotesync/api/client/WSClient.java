@@ -180,7 +180,7 @@ public class WSClient extends AbstractClient {
 				requestConfig = RequestConfig.custom().setProxy(proxy).build();
 			}
 			
-			if (clientConfiguration.getIgnoreSelfSignedSSLCertificate()) {
+			if (clientConfiguration.getTrustSelfSignedSSLCertificate()) {
 				SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
 				sslContextBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
 			    httpClientBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContextBuilder.build()));

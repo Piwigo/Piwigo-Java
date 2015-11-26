@@ -36,7 +36,7 @@ public class OptionsUI extends JFrame {
 	private JTextField proxyLogintextField;
 	private JTextField proxyPasswordtextField;
 	private JCheckBox chckbxUseProxy;
-	private JCheckBox chckbxISSSC;
+	private JCheckBox chckbxTSSSC;
 
 	public static void run(final SyncConfiguration syncConfiguration) {
 		EventQueue.invokeLater(new Runnable() {
@@ -111,9 +111,9 @@ public class OptionsUI extends JFrame {
 		contentPane.add(proxyPasswordtextField);
 		proxyPasswordtextField.setColumns(10);
 
-		chckbxISSSC = new JCheckBox("Ignore self signed SSL certificates");
-		chckbxISSSC.setBounds(8, 170, 300, 23);
-		contentPane.add(chckbxISSSC);
+		chckbxTSSSC = new JCheckBox("Trust self signed SSL certificates");
+		chckbxTSSSC.setBounds(8, 170, 300, 23);
+		contentPane.add(chckbxTSSSC);
 
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -124,7 +124,7 @@ public class OptionsUI extends JFrame {
 				syncConfiguration.setProxyPort(proxyPorttextField.getText());
 				syncConfiguration.setProxyUsername(proxyLogintextField.getText());
 				syncConfiguration.setProxyPassword(proxyPasswordtextField.getText());
-				syncConfiguration.setIgnoreSelfSignedSSLCertificate(Boolean.toString(chckbxISSSC.isSelected()));
+				syncConfiguration.setTrustSelfSignedSSLCertificate(Boolean.toString(chckbxTSSSC.isSelected()));
 			}
 
 			@Override
@@ -135,7 +135,7 @@ public class OptionsUI extends JFrame {
 				proxyPorttextField.setText(syncConfiguration.getProxyPort() + "");
 				proxyLogintextField.setText(syncConfiguration.getProxyUsername());
 				proxyPasswordtextField.setText(syncConfiguration.getProxyPassword());
-				chckbxISSSC.setSelected(syncConfiguration.getIgnoreSelfSignedSSLCertificate());
+				chckbxTSSSC.setSelected(syncConfiguration.getTrustSelfSignedSSLCertificate());
 			}
 
 		});

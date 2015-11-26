@@ -18,14 +18,14 @@
 
 # FAQ
 
-**Is there any documentation available**
+* **Is there any documentation available**
+* Not yet
 
-Not yet
+* **What does "Sync" means**
+* Right, it means "upload". This application will only upload new local images to your remote gallery
 
-
-**What does "Sync" means**
-
-Right, it means "upload". This application will only upload new local images to your remote gallery
+* **Is there any link to [Piwigo Import Tree](http://piwigo.org/doc/doku.php?id=user_documentation:tools:piwigo_import_tree) ?**
+* Yes. As of 0.0.x, we try to offer the same level of functionality. Right now, we use the same cache mechanism (upload each local file once based on it's filename)   
 
 # Troubleshooting
 

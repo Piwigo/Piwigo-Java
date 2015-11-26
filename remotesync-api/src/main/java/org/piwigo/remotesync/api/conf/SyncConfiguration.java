@@ -71,8 +71,8 @@ public class SyncConfiguration implements ISyncConfiguration {
 	protected String proxyPassword;
 
 	@Element(required = false)
-	@Option(name = "-isssc", usage = "ignore self signed ssl certificates")
-	protected String ignoreSelfSignedSSLCertificates = Boolean.FALSE.toString();
+	@Option(name = "-tsssc", usage = "trust self signed ssl certificates")
+	protected String trustSelfSignedSSLCertificates = Boolean.FALSE.toString();
 
 	@Element(required = false)
 	@Option(name = "-cs", usage = "chunk size (in Kbytes)")
@@ -177,16 +177,16 @@ public class SyncConfiguration implements ISyncConfiguration {
 		this.proxyPassword = proxyPassword;
 	}
 
-	public boolean getIgnoreSelfSignedSSLCertificate() {
+	public boolean getTrustSelfSignedSSLCertificate() {
 		try {
-			return Boolean.parseBoolean(ignoreSelfSignedSSLCertificates);
+			return Boolean.parseBoolean(trustSelfSignedSSLCertificates);
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
-	public void setIgnoreSelfSignedSSLCertificate(String string) {
-		this.ignoreSelfSignedSSLCertificates = string;
+	public void setTrustSelfSignedSSLCertificate(String string) {
+		this.trustSelfSignedSSLCertificates = string;
 	}
 	
 	public int getChunkSize() {
