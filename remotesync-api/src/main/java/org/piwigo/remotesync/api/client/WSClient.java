@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.net.ssl.SSLException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.http.HttpHost;
@@ -35,6 +37,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.piwigo.remotesync.api.IClient;
 import org.piwigo.remotesync.api.IClientConfiguration;
 import org.piwigo.remotesync.api.exception.ClientException;
+import org.piwigo.remotesync.api.exception.ClientSSLException;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.exception.ServerException;
 import org.piwigo.remotesync.api.request.AbstractRequest;
@@ -105,7 +108,7 @@ public class WSClient extends AbstractClient {
 		}
 	}
 
-	protected <T extends BasicResponse> String getXmlResponse(AbstractRequest<T> request) throws ClientException, ServerException {
+	protected <T extends BasicResponse> String getXmlResponse(AbstractRequest<T> request) throws ClientServerException {
 		CloseableHttpResponse httpResponse = null;
 		
 		try {
@@ -115,6 +118,8 @@ public class WSClient extends AbstractClient {
 				throw new ServerException(httpResponse.getStatusLine().getReasonPhrase() + " (code " + httpResponse.getStatusLine().getStatusCode() + ")");
 
 			return IOUtils.toString(httpResponse.getEntity().getContent(), "UTF-8");
+		} catch (ClientServerException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ClientException("Unable to read response content", e);
 		} finally {
@@ -154,6 +159,8 @@ public class WSClient extends AbstractClient {
 			method.setEntity(multipartEntityBuilder.build());
 
 			return getHttpClient().execute(method);
+		} catch (SSLException e) {
+			throw new ClientSSLException("SSL certificate exception (Please use option 'Trust SSL certificates')", e);
 		} catch (Exception e) {
 			throw new ClientException("Unable to send request", e);
 		}

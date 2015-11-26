@@ -16,7 +16,6 @@ import java.util.Collection;
 
 import org.piwigo.remotesync.api.ISyncConfiguration;
 import org.piwigo.remotesync.api.client.AuthenticatedWSClient;
-import org.piwigo.remotesync.api.client.WSClient;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.PwgCategoriesAddRequest;
 import org.piwigo.remotesync.api.request.PwgImagesAddSimpleRequest;
@@ -43,7 +42,7 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 			logger.info("Connect successful");
 		} catch (ClientServerException e) {
 			client = null;
-			logger.error("Unable to connect : " + e.getMessage());
+			logger.error("Unable to connect : " + e.getMessage(), e);
 			throw new CancelException("Unable to connect", startDirectory, 0);
 		}
 	}
@@ -58,7 +57,7 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 			client = null;
 			logger.info("Disconnect successful");
 		} catch (ClientServerException e) {
-			logger.error("Unable to disconnect : " + e.getMessage());
+			logger.error("Unable to disconnect : " + e.getMessage(), e);
 		}
 	}
 
