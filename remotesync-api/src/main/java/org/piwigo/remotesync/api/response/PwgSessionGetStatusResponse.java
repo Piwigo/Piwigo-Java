@@ -41,6 +41,9 @@ public class PwgSessionGetStatusResponse extends BasicResponse {
 	@Element(required=false)
 	public String upload_file_types;
 
+	@Element(required=false)
+	public String upload_form_chunk_size;
+
 	public boolean isAdmin() {
 		return Constants.UserType.admin.toString().equals(status) || Constants.UserType.webmaster.toString().equals(status);
 	}

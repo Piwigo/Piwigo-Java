@@ -19,6 +19,8 @@ import javax.net.ssl.SSLException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
@@ -29,7 +31,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -37,6 +38,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.piwigo.remotesync.api.IClient;
 import org.piwigo.remotesync.api.IClientConfiguration;
 import org.piwigo.remotesync.api.exception.ClientException;
+import org.piwigo.remotesync.api.exception.ClientRedirectException;
 import org.piwigo.remotesync.api.exception.ClientSSLException;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.exception.ServerException;
@@ -114,8 +116,8 @@ public class WSClient extends AbstractClient {
 		try {
 			httpResponse = getHttpResponse(request);
 
-			if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
-				throw new ServerException(httpResponse.getStatusLine().getReasonPhrase() + " (code " + httpResponse.getStatusLine().getStatusCode() + ")");
+			checkMovedUrl(httpResponse);
+			checkStatusCode(httpResponse);
 
 			return IOUtils.toString(httpResponse.getEntity().getContent(), "UTF-8");
 		} catch (ClientServerException e) {
@@ -129,6 +131,28 @@ public class WSClient extends AbstractClient {
 			} catch (IOException e) {
 				logger.error("cannot close post", e);
 			}
+		}
+	}
+
+	protected void checkStatusCode(CloseableHttpResponse httpResponse) throws ServerException {
+		if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+			throw new ServerException(httpResponse.getStatusLine().getReasonPhrase() + " (code " + httpResponse.getStatusLine().getStatusCode() + ")");
+	}
+
+	protected void checkMovedUrl(CloseableHttpResponse httpResponse) throws ClientRedirectException {
+		if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_PERMANENTLY ||
+				httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
+
+			String newLocation = "new location";
+
+			Header[] headers = httpResponse.getHeaders(HttpHeaders.LOCATION);
+			if (headers.length > 0) {
+				newLocation = headers[0].getValue();
+			}
+
+			ClientRedirectException clientRedirectException = new ClientRedirectException("Remote site moved to " + newLocation);
+			clientRedirectException.setDestination(newLocation);
+			throw clientRedirectException;
 		}
 	}
 
@@ -160,7 +184,7 @@ public class WSClient extends AbstractClient {
 
 			return getHttpClient().execute(method);
 		} catch (SSLException e) {
-			throw new ClientSSLException("SSL certificate exception (Please use option 'Trust SSL certificates')", e);
+			throw new ClientSSLException("SSL certificate exception (Please try option 'Trust SSL certificates')", e);
 		} catch (Exception e) {
 			throw new ClientException("Unable to send request", e);
 		}
@@ -187,9 +211,9 @@ public class WSClient extends AbstractClient {
 				requestConfig = RequestConfig.custom().setProxy(proxy).build();
 			}
 			
-			if (clientConfiguration.getTrustSelfSignedSSLCertificate()) {
+			if (clientConfiguration.getTrustSSLCertificates()) {
 				SSLContextBuilder sslContextBuilder = new SSLContextBuilder();
-				sslContextBuilder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+				sslContextBuilder.loadTrustMaterial(null, new TrustSSLCertificatesStrategy());
 			    httpClientBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContextBuilder.build()));
 			}
 
