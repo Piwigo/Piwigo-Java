@@ -12,6 +12,9 @@ package org.piwigo.remotesync.api.response;
 
 import org.piwigo.remotesync.api.Constants;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+
+import java.util.List;
 
 public class PwgSessionGetStatusResponse extends BasicResponse {
 	@Element
@@ -37,6 +40,9 @@ public class PwgSessionGetStatusResponse extends BasicResponse {
 
 	@Element(required=false)
 	public String version;
+
+	@ElementList(required=false)
+	public List<PwgSessionGetStatusResponseAvailableSizes> available_sizes;
 
 	@Element(required=false)
 	public String upload_file_types;
