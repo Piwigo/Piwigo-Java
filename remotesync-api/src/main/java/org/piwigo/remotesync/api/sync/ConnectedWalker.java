@@ -96,7 +96,7 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 				request.setCategory(albumId);
 			return client.sendRequest(request).image_id;
 		} catch (ClientServerException e) {
-			logger.error("Cannot updload image for " + file, e);
+			logger.error("Cannot upload image for " + file, e);
 			return null;
 		}
 	}
