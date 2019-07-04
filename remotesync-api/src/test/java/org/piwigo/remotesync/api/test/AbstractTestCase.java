@@ -23,7 +23,6 @@ import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.util.FileUtil;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.Level;
 import junit.framework.TestCase;
 
 public abstract class AbstractTestCase extends TestCase {

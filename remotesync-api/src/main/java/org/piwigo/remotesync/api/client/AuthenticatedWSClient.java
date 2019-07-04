@@ -14,17 +14,23 @@ import org.piwigo.remotesync.api.IClientConfiguration;
 import org.piwigo.remotesync.api.exception.ClientException;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.AbstractRequest;
+import org.piwigo.remotesync.api.request.PwgGetVersionRequest;
 import org.piwigo.remotesync.api.request.PwgSessionGetStatusRequest;
 import org.piwigo.remotesync.api.request.PwgSessionLoginRequest;
 import org.piwigo.remotesync.api.request.PwgSessionLogoutRequest;
 import org.piwigo.remotesync.api.response.BasicResponse;
-import org.piwigo.remotesync.api.response.PwgSessionGetStatusResponse;
+import org.piwigo.remotesync.api.response.PwgGetVersionResponse;
+import org.piwigo.remotesync.legacy.PwgSessionGetStatusRequestLegacy;
+import org.piwigo.remotesync.legacy.PwgSessionGetStatusResponseLegacy;
+import org.piwigo.remotesync.legacy.VersionParser;
 
 //TODO handle session timeout
 public class AuthenticatedWSClient extends WSClient {
 
-	private PwgSessionGetStatusResponse sessionGetStatusResponse;
-
+	private PwgSessionGetStatusResponseLegacy sessionGetStatusResponse;
+	private PwgGetVersionResponse piwigoVersion;
+	private VersionParser versionParser;
+	
 	public AuthenticatedWSClient(IClientConfiguration clientConfiguration) {
 		super(clientConfiguration);
 	}
@@ -32,6 +38,11 @@ public class AuthenticatedWSClient extends WSClient {
 	@Override
 	protected <T extends BasicResponse> void checkRequestAuthorization(AbstractRequest<T> request) throws ClientServerException {
 		if (request.isAdminOnly() || request.isNeedPwgToken()) {
+			if (piwigoVersion == null)
+				getPiwigoVersion();
+			if (versionParser == null)
+				versionParser = new VersionParser();
+			versionParser.parseVersion(piwigoVersion.version);
 			if (sessionGetStatusResponse == null)
 				getSessionStatus();
 			if (request.isAdminOnly() && !sessionGetStatusResponse.isAdmin())
@@ -40,9 +51,16 @@ public class AuthenticatedWSClient extends WSClient {
 				request.setPwgToken(sessionGetStatusResponse.pwg_token);
 		}
 	}
+	
+	private void getPiwigoVersion() throws ClientServerException {
+		piwigoVersion = doSendRequest(new PwgGetVersionRequest());
+	}
 
 	private void getSessionStatus() throws ClientServerException {
-		sessionGetStatusResponse = doSendRequest(new PwgSessionGetStatusRequest());
+		if (versionParser.getMajorVersion() <= 2 && versionParser.getMinorVersion() <= 8)
+			sessionGetStatusResponse = doSendRequest(new PwgSessionGetStatusRequestLegacy());
+		else
+			sessionGetStatusResponse = doSendRequest(new PwgSessionGetStatusRequest());
 	}
 
 	@Override

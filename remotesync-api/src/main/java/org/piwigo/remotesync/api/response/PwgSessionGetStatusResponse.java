@@ -10,49 +10,18 @@
  ******************************************************************************/
 package org.piwigo.remotesync.api.response;
 
-import org.piwigo.remotesync.api.Constants;
-import org.simpleframework.xml.Element;
+import java.util.List;
 
-public class PwgSessionGetStatusResponse extends BasicResponse {
-	@Element
-	public String username;
+import org.piwigo.remotesync.legacy.PwgSessionGetStatusResponseLegacy;
+import org.simpleframework.xml.ElementList;
 
-	@Element
-	public String status;
+public class PwgSessionGetStatusResponse extends PwgSessionGetStatusResponseLegacy {
 
-	@Element
-	public String theme;
+	/**
+	 * Casting our list of available_sizes here as it will not be used by the tool
+	 * @since v0.0.14
+	 */
+	@ElementList(required=false)
+	public List<String> available_sizes;
 
-	@Element
-	public String language;
-
-	@Element
-	public String pwg_token;
-
-	@Element
-	public String charset;
-
-	@Element
-	public String current_datetime;
-
-	@Element(required=false)
-	public String version;
-
-	@Element(required=false)
-	public String upload_file_types;
-
-	@Element(required=false)
-	public String upload_form_chunk_size;
-
-	public boolean isAdmin() {
-		return Constants.UserType.admin.toString().equals(status) || Constants.UserType.webmaster.toString().equals(status);
-	}
-
-	public boolean isGuest() {
-		return Constants.UserType.guest.toString().equals(status);
-	}
-
-	public boolean isLogged() {
-		return !isGuest();
-	}
 }

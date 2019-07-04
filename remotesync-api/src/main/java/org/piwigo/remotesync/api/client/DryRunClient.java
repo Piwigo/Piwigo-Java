@@ -21,6 +21,7 @@ public class DryRunClient extends AbstractClient {
 
 	private static Logger logger = LoggerFactory.getLogger(DryRunClient.class);
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public <T extends BasicResponse> T doSendRequest(AbstractRequest<T> request) throws ClientServerException {
 		try {

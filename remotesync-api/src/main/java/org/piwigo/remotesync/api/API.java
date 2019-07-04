@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.piwigo.remotesync.api;
 
-import org.piwigo.remotesync.api.AbstractAPI;
 import org.piwigo.remotesync.api.client.AuthenticatedWSClient;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.PwgImagesAddAllChunksRequest;

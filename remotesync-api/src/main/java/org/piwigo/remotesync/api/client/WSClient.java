@@ -35,6 +35,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.piwigo.remotesync.api.Constants;
 import org.piwigo.remotesync.api.IClient;
 import org.piwigo.remotesync.api.IClientConfiguration;
 import org.piwigo.remotesync.api.exception.ClientException;
@@ -217,6 +218,7 @@ public class WSClient extends AbstractClient {
 			    httpClientBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContextBuilder.build()));
 			}
 
+			httpClientBuilder.setUserAgent("PiwigoRemoteSync " + Constants.CLIENT_VERSION);
 			httpClient = httpClientBuilder.build();
 		}
 		
