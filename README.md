@@ -8,8 +8,8 @@
 
 # Requirements
 
-* A **Java** jre/jdk (version **6** or greater)
-* A **Piwigo** working **installation** (version **2.6** or greater)
+* A **Java** JRE/JDK (version **7** or greater)
+* A **Piwigo** working **installation** (version **2.9** or greater)
 
 # Quick start
 
