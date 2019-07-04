@@ -10,7 +10,10 @@
  ******************************************************************************/
 package org.piwigo.remotesync.legacy;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
 
 public class VersionParser 
 {
@@ -25,7 +28,16 @@ public class VersionParser
 		
 		major = Integer.parseInt(parts[0]);
 		minor = Integer.parseInt(parts[1]);
-		build = Integer.parseInt(parts[2]);
+		build = StringUtils.isNumeric(parts[2]) ? Integer.parseInt(parts[2]) : parseBetaVersion(parts[2]);
+	}
+	
+	public int parseBetaVersion(String version)
+	{
+		Matcher matcher = Pattern.compile("\\d+").matcher(version);
+		
+        if (!matcher.find())
+            throw new NumberFormatException("For input string [" + version + "]");
+		return Integer.parseInt(matcher.group());
 	}
 	
 	public int getMajorVersion()
