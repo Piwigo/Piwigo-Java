@@ -218,7 +218,7 @@ public class WSClient extends AbstractClient {
 			    httpClientBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContextBuilder.build()));
 			}
 
-			httpClientBuilder.setUserAgent("PiwigoRemoteSync " + Constants.CLIENT_VERSION);
+			httpClientBuilder.setUserAgent("PiwigoRemoteSync " + getClass().getPackage().getImplementationVersion());
 			httpClient = httpClientBuilder.build();
 		}
 		

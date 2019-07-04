@@ -41,13 +41,6 @@ public class Constants {
 		}
 
 	}
-	
-	/**
-	 * Added some constant to define the current version
-	 * Used to build the matching user-agent
-	 * @since v.0.0.14
-	 */
-	public static final String CLIENT_VERSION = "0.0.14";
 
 	public static final String DIRECTORY_DEFAULT = ConfigurationUtil.INSTANCE.getUserCurrentDirectory().getAbsolutePath();
 
