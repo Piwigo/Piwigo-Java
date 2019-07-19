@@ -36,8 +36,7 @@ public class RemotesyncUI {
 
 	private File logFile;
 
-	private SyncConfiguration syncConfiguration = ConfigurationUtil.INSTANCE.getUserConfiguration()
-			.getCurrentSyncConfiguration();
+	private SyncConfiguration syncConfiguration = ConfigurationUtil.INSTANCE.getUserConfiguration().getCurrentSyncConfiguration();
 
 	/**
 	 * Launch the application.
@@ -96,13 +95,11 @@ public class RemotesyncUI {
 	}
 
 	private void setCustomOut() {
-		logFile = new File("./.log");
+		logFile = new File(ConfigurationUtil.INSTANCE.getUserHomeDirectory(), "log.txt");
 		PrintStream ps = null;
-		try 
-		{
+		try  {
 			ps = new PrintStream(logFile);
-		} catch (FileNotFoundException e) 
-		{
+		}  catch (FileNotFoundException e) {
 			return;
 		}
 		System.setOut(ps);

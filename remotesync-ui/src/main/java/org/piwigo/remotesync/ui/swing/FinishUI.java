@@ -88,14 +88,8 @@ public class FinishUI extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == this.logBtn) {
-			if (Desktop.isDesktopSupported())
-				try {
-					Desktop.getDesktop().edit(this.parent.getRemoteParent().getLogFile());
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-		}
+		if (e.getSource() == this.logBtn)
+			this.parent.openLogFile();
 		if (e.getSource() == this.syncBtn)
 			this.parent.sendToSync();
 	}

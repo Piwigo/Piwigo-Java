@@ -12,11 +12,13 @@ package org.piwigo.remotesync.ui.swing;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -164,6 +166,14 @@ public class MainUI extends JPanel implements ActionListener
 		if (chooser.showOpenDialog(new JFrame()) == JFileChooser.APPROVE_OPTION) {
 			this.getUploadInterface().setShownPath(chooser.getSelectedFile().getAbsolutePath());
 		}
+	}
+
+	protected void openLogFile()
+	{
+		if (Desktop.isDesktopSupported())
+		try {
+			Desktop.getDesktop().edit(this.getRemoteParent().getLogFile());
+		} catch (IOException e1) {}
 	}
 
 	protected void sendToSync()
