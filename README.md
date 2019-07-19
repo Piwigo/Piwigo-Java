@@ -18,10 +18,10 @@
 
 # Screenshots
 
-![Screenshot 1](https://sandbox.voriondev.fr/_data/i/upload/2019/07/19/20190719134734-ae92aa73-me.png)
-![Screenshot 2](https://sandbox.voriondev.fr/_data/i/upload/2019/07/19/20190719134735-67c4095c-me.png)
-![Screenshot 3](https://sandbox.voriondev.fr/_data/i/upload/2019/07/19/20190719134735-9e4aa111-me.png)
-![Screenshot 4](https://sandbox.voriondev.fr/_data/i/upload/2019/07/19/20190719134736-710b960e-me.png)
+![Screenshot 1](http://sandbox.piwigo.com/uploads/4/y/1/4y1zzhnrnw//2019/07/19/20190719160350-ae92aa73.png)
+![Screenshot 2](http://sandbox.piwigo.com/uploads/4/y/1/4y1zzhnrnw//2019/07/19/20190719160351-67c4095c.png)
+![Screenshot 3](http://sandbox.piwigo.com/uploads/4/y/1/4y1zzhnrnw//2019/07/19/20190719160351-9e4aa111.png)
+![Screenshot 4](http://sandbox.piwigo.com/uploads/4/y/1/4y1zzhnrnw//2019/07/19/20190719160743-7f8ba535.png)
 
 # FAQ
 
