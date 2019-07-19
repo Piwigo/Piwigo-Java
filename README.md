@@ -4,7 +4,7 @@
 
 * Piwigo-Java is a GitHub project for the Piwigo Remote Sync Java application
 * Piwigo Remote Sync is also a reusable API for the Piwigo photo gallery software
-* Piwigo Remote Sync is available in **alpha** version
+* Piwigo Remote Sync is available in **beta** version
 
 # Requirements
 
@@ -16,12 +16,16 @@
 1. **Download** the latest **remotesync-ui.jar** from https://github.com/Piwigo/Piwigo-Java/releases
 2. **Double click** on it (your Operating System should use your default Java installation to execute the application)
 
+# Screenshots
+
+![Screenshot 1](https://sandbox.voriondev.fr/_data/i/upload/2019/07/19/20190719134734-ae92aa73-me.png)
+![Screenshot 2](https://sandbox.voriondev.fr/_data/i/upload/2019/07/19/20190719134735-67c4095c-me.png)
+![Screenshot 3](https://sandbox.voriondev.fr/_data/i/upload/2019/07/19/20190719134735-9e4aa111-me.png)
+![Screenshot 4](https://sandbox.voriondev.fr/_data/i/upload/2019/07/19/20190719134736-710b960e-me.png)
+
 # FAQ
 
-* **Is there any documentation available**
-* Not yet
-
-* **What does "Sync" means**
+* **What does "Sync" mean ?s**
 * Right, it means "upload". This application will only upload new local images to your remote gallery
 
 * **Is there any link to [Piwigo Import Tree](http://piwigo.org/doc/doku.php?id=user_documentation:tools:piwigo_import_tree) ?**
@@ -29,9 +33,8 @@
 
 # Troubleshooting
 
-Using a shell, start the application with
-
-`java -jar /tmp/remotesync-ui.jar -debug`
+When you manage to upload some images, you may get some errors.
+If so, please use the "Show log" button, and attach it to an issue here on Github.
 
 # License
 
