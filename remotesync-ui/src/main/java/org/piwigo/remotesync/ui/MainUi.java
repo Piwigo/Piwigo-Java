@@ -10,24 +10,21 @@
  ******************************************************************************/
 package org.piwigo.remotesync.ui;
 
+import org.kohsuke.args4j.Option;
 import org.piwigo.remotesync.api.Main;
 
 public class MainUi extends Main {
 	public static void main(String[] args) {
-		new MainUi().run(args);
+		new MainUi().start();
 	}
 
-//	@Option(name = "-batch", usage = "batch mode (no ui)")
-//	protected boolean batch = false;
-//
-//	@Option(name = "-testclient", usage = "test api client ui")
-//	protected boolean testclient = false;
-//
-//	@Option(name = "-swing", usage = "old swing ui")
-//	protected boolean swing = false;
-
+	@Option(name = "-batch", usage = "batch mode (no ui)")
 	protected boolean batch = false;
+
+	@Option(name = "-testclient", usage = "test api client ui")
 	protected boolean testclient = false;
+
+	@Option(name = "-swing", usage = "old swing ui")
 	protected boolean swing = true;
 
 	protected void start() {

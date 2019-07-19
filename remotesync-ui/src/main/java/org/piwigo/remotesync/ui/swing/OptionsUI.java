@@ -20,6 +20,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -57,10 +59,16 @@ public class OptionsUI extends JFrame {
 	 * Create the frame.
 	 * 
 	 * @param syncConfiguration
+	 * @throws UnsupportedLookAndFeelException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
 	 */
-	public OptionsUI(final SyncConfiguration syncConfiguration) {
+	public OptionsUI(final SyncConfiguration syncConfiguration) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setBounds(100, 100, 450, 300);
+		setTitle("Settings");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

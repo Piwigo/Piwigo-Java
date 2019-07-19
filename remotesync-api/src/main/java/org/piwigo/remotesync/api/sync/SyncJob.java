@@ -21,21 +21,37 @@ import org.slf4j.LoggerFactory;
 public class SyncJob extends Job {
 
 	private static final Logger logger = LoggerFactory.getLogger(SyncJob.class);
+	
+	private LoginJob loginJob;
+	
+	public SyncJob(LoginJob preJob)
+	{
+		loginJob = preJob;
+	}
 
 	protected void doExecute() throws Exception {
 		ISyncConfiguration syncConfiguration = ConfigurationUtil.INSTANCE.getUserConfiguration().getCurrentSyncConfiguration();
 
 		// TODO shoud validate config
 		// SyncConfigurationValidator.INSTANCE.validate(syncConfiguration);
-
+		
 		logger.info("User {} will sync gallery {} with directory {}", syncConfiguration.getUsername(), syncConfiguration.getUrl(), syncConfiguration.getDirectory());
-
-		try {
-			new ConnectedWalker(syncConfiguration).walk();
-		} catch (IOException e) {
-			logger.error("Error in sync", e);
+		if (loginJob.getConnectedWalker().getClient() != null) {
+			try {
+				loginJob.getConnectedWalker().setSyncConfiguration(syncConfiguration);
+				System.out.println(loginJob.getConnectedWalker().syncConfiguration.getDirectory());
+				loginJob.getConnectedWalker().walk();
+			} catch (IOException e) {
+				logger.error("Error in sync", e);
+			}
 		}
-
-		logger.info("Finished");
+		else
+			logger.error("User not logged in.");
+		logger.info("Syncing done.");
+	}
+	
+	public ConnectedWalker getConnectedWalker()
+	{
+		return loginJob.getConnectedWalker();
 	}
 }

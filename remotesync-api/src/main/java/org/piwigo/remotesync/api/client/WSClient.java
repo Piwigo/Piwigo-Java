@@ -31,11 +31,12 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.piwigo.remotesync.api.Constants;
 import org.piwigo.remotesync.api.IClient;
 import org.piwigo.remotesync.api.IClientConfiguration;
 import org.piwigo.remotesync.api.exception.ClientException;
@@ -176,10 +177,11 @@ public class WSClient extends AbstractClient {
 					for (Object object : (List<? extends Object>) value)
 						if (object != null)
 							multipartEntityBuilder.addTextBody(key + "[]", object.toString());
-				} else if (value instanceof Enum)
+				} 
+				else if (value instanceof Enum)
 					multipartEntityBuilder.addTextBody(key, value.toString().toLowerCase());
 				else
-					multipartEntityBuilder.addTextBody(key, value.toString());
+					multipartEntityBuilder.addTextBody(key, value.toString(), ContentType.create("multipart/form-data", "UTF-8"));
 			}
 			method.setEntity(multipartEntityBuilder.build());
 

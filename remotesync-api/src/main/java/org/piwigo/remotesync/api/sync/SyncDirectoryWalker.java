@@ -34,7 +34,6 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 	protected SyncDirectoryWalker(ISyncConfiguration syncConfiguration) {
 		super(null, Constants.IMAGE_EXTENSIONS_FILTER, -1);
 		this.syncConfiguration = syncConfiguration;
-		startDirectory = new File(syncConfiguration.getDirectory());
 	}
 
 	@Override
@@ -47,7 +46,7 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 			return;
 
 		if (legacyCache.getAlbumCacheElement() != null) {
-			logger.debug("album already in cache : " + directory);
+			logger.debug("Album is already in cache : " + directory);
 		} else {
 			Integer parentAlbumId = null;
 			try {
@@ -55,7 +54,7 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 			} catch (Exception e) {
 				// FIXME : ignore me
 			}
-			logger.info("will create album for " + directory);
+			logger.info("Creating album for " + directory);
 			legacyCache.addAlbum(createAlbum(directory, parentAlbumId));
 		}
 	}
@@ -64,7 +63,7 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 		LegacyCache legacyCache = legacyCaches.get(file.getParentFile());
 
 		if (legacyCache.containsImage(file)) {
-			logger.debug("image already in cache : " + file);
+			logger.debug("Image already in cache : " + file);
 		} else {
 			Integer albumId = null;
 			try {
@@ -72,12 +71,13 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 			} catch (Exception e) {
 				// FIXME : ignore me
 			}
-			logger.info("will upload image for " + file + " in album with id " + albumId);
+			logger.info("Uploading " + file.getName() + " in album with ID " + albumId);
 			legacyCache.addImage(file, createImage(file, albumId));
 		}
 	}
 
 	public void walk() throws IOException {
+		this.startDirectory = new File(syncConfiguration.getDirectory());
 		walk(startDirectory, null);
 	}
 

@@ -18,7 +18,7 @@ import org.piwigo.remotesync.api.ISyncConfiguration;
 import org.piwigo.remotesync.api.client.AuthenticatedWSClient;
 import org.piwigo.remotesync.api.exception.ClientServerException;
 import org.piwigo.remotesync.api.request.PwgCategoriesAddRequest;
-import org.piwigo.remotesync.api.request.PwgImagesAddSimpleRequest;
+import org.piwigo.remotesync.api.request.PwgImagesUploadRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +27,9 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectedWalker.class);
 
 	private AuthenticatedWSClient client;
-
-	public ConnectedWalker(ISyncConfiguration syncConfiguration) {
+	private ProgressLinker linker = new ProgressLinker();
+	
+	protected ConnectedWalker(ISyncConfiguration syncConfiguration) {
 		super(syncConfiguration);
 	}
 
@@ -42,7 +43,7 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 			logger.info("Connect successful");
 		} catch (ClientServerException e) {
 			client = null;
-			logger.error("Unable to connect : " + e.getMessage(), e);
+			logger.error("Unable to connect : " + e.getMessage());
 			throw new CancelException("Unable to connect", startDirectory, 0);
 		}
 	}
@@ -60,6 +61,19 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 			logger.error("Unable to disconnect : " + e.getMessage(), e);
 		}
 	}
+	
+	protected AuthenticatedWSClient getClient() {
+		return (client);
+	}
+	
+	public ProgressLinker getProgressLinker() {
+		return (linker);
+	}
+	
+	public void setSyncConfiguration(ISyncConfiguration conf)
+	{
+		this.syncConfiguration = conf;
+	}
 
 	@Override
 	protected void handleStart(File startDirectory, Collection<File> results) throws IOException {
@@ -69,34 +83,38 @@ public class ConnectedWalker extends SyncDirectoryWalker {
 	@Override
 	protected void handleEnd(Collection<File> results) throws IOException {
 		super.handleEnd(results);
-		disconnect();
 	}
 
 
 	@Override
 	protected Integer createAlbum(File directory, Integer parentAlbumId) throws IOException {
-		connect();
-		
 		try {
+			linker.addAlbum();
 			return client.sendRequest(new PwgCategoriesAddRequest(directory.getName()).setParent(parentAlbumId)).id;
 		} catch (ClientServerException e) {
 			logger.error("Cannot create album for " + directory, e);
+			linker.removeAlbum();
 			return null;
 		}
 	}
 
 	@Override
-	protected Integer createImage(File file, Integer albumId) throws IOException {
-		connect();
-		
+	protected Integer createImage(File file, Integer albumId) throws IOException {	
 		try {
-			PwgImagesAddSimpleRequest request = new PwgImagesAddSimpleRequest(file);
-			// FIXME should we upload an image without album?
+			linker.fillImageDetails(file);
+			linker.addImage();
+			PwgImagesUploadRequest request = new PwgImagesUploadRequest(file);
 			if (albumId != null)
 				request.setCategory(albumId);
+			else {
+				logger.error("Cannot upload an image without an album. Please move the image in a subfolder.");
+				linker.removeImage();
+				return (null);
+			}
 			return client.sendRequest(request).image_id;
 		} catch (ClientServerException e) {
 			logger.error("Cannot upload image for " + file, e);
+			linker.removeImage();
 			return null;
 		}
 	}

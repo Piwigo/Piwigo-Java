@@ -143,6 +143,10 @@ public abstract class AbstractAPI {
 		return getClient().sendRequest(request);
 	}
 
+	public PwgImagesUploadResponse imagesUpload(PwgImagesUploadRequest request) throws ClientServerException {
+		return getClient().sendRequest(request);
+	}
+
 	public PwgImagesCheckFilesResponse imagesCheckFiles(PwgImagesCheckFilesRequest request) throws ClientServerException {
 		return getClient().sendRequest(request);
 	}

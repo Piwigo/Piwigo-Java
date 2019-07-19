@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 public class LegacyCache {
 
-	public static final String LEGACY_CACHE_FILE_NAME = ".piwigo_import_tree.txt";
+	public static final String LEGACY_CACHE_FILE_NAME = ".piwigo_import_tree";
 
 	private static final Pattern ALBUM_PATTERN = Pattern.compile("(.*) album_id = (\\d*)");
 

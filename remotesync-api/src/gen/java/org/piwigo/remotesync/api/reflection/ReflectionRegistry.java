@@ -49,6 +49,7 @@ public class ReflectionRegistry {
 		methodDetails.add(new MethodReflection("pwg.images.addComment", "pwg.images.addComment.xml", PwgImagesAddCommentRequest.class, PwgImagesAddCommentResponse.class));
 		methodDetails.add(new MethodReflection("pwg.images.addFile", "pwg.images.addFile.xml", PwgImagesAddFileRequest.class, PwgImagesAddFileResponse.class));
 		methodDetails.add(new MethodReflection("pwg.images.addSimple", "pwg.images.addSimple.xml", PwgImagesAddSimpleRequest.class, PwgImagesAddSimpleResponse.class));
+		methodDetails.add(new MethodReflection("pwg.images.upload", "pwg.images.upload.xml", PwgImagesUploadRequest.class, PwgImagesUploadResponse.class));
 		methodDetails.add(new MethodReflection("pwg.images.checkFiles", "pwg.images.checkFiles.xml", PwgImagesCheckFilesRequest.class, PwgImagesCheckFilesResponse.class));
 		methodDetails.add(new MethodReflection("pwg.images.checkUpload", "pwg.images.checkUpload.xml", PwgImagesCheckUploadRequest.class, PwgImagesCheckUploadResponse.class));
 		methodDetails.add(new MethodReflection("pwg.images.delete", "pwg.images.delete.xml", PwgImagesDeleteRequest.class, PwgImagesDeleteResponse.class));

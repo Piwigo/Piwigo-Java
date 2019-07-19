@@ -8,25 +8,26 @@
  * Contributors:
  *     Matthieu Helleboid - initial API and implementation
  ******************************************************************************/
-package org.piwigo.remotesync.api;
+package org.piwigo.remotesync.api.response;
 
-import org.piwigo.remotesync.api.AbstractMain;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.piwigo.remotesync.api.model.UploadCategory;
+import org.simpleframework.xml.Element;
 
-public class Main extends AbstractMain {
-	static final Logger logger = LoggerFactory.getLogger(Main.class);
+@org.piwigo.remotesync.generator.Generated
+public class PwgImagesUploadResponse extends BasicResponse {
 
-	public static void main(String[] args) {
-		new Main().run(args);
-	}
-	
-	protected void start() {
-		logger.debug("will start batch Remotesync");
-	}
+    @Element(required = false)
+	public Integer image_id;
 
-//	// TODO implement dry run
-//	@Option(name = "-dryrun", usage = "do nothing")
-//	public boolean dryrun = false;
+	@Element(required = false)
+    public String src;
 
+    @Element(required = false)
+    public String square_src;
+
+    @Element(required = false)
+    public String name;
+
+    @Element(required = false)
+    public UploadCategory category;
 }

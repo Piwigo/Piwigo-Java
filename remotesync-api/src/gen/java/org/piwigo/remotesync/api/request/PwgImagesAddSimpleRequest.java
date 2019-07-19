@@ -26,6 +26,7 @@ public class PwgImagesAddSimpleRequest extends AbstractRequest<PwgImagesAddSimpl
 
 	public PwgImagesAddSimpleRequest(java.io.File image) {
 		setImage(image);
+		setName(image.getName());
 	}
 
  	public PwgImagesAddSimpleRequest setCategory(Integer category) {

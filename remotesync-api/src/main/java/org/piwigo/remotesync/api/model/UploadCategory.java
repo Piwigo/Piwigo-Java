@@ -8,25 +8,18 @@
  * Contributors:
  *     Matthieu Helleboid - initial API and implementation
  ******************************************************************************/
-package org.piwigo.remotesync.api;
+package org.piwigo.remotesync.api.model;
 
-import org.piwigo.remotesync.api.AbstractMain;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.simpleframework.xml.Element;
 
-public class Main extends AbstractMain {
-	static final Logger logger = LoggerFactory.getLogger(Main.class);
+public class UploadCategory {
 
-	public static void main(String[] args) {
-		new Main().run(args);
-	}
+    @Element(required = false)
+	public Integer id;
+
+	@Element(required = false)
+	public String nb_photos;
 	
-	protected void start() {
-		logger.debug("will start batch Remotesync");
-	}
-
-//	// TODO implement dry run
-//	@Option(name = "-dryrun", usage = "do nothing")
-//	public boolean dryrun = false;
-
+	@Element(required = false)
+	public String label;
 }

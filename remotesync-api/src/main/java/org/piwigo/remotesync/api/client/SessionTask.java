@@ -8,44 +8,30 @@
  * Contributors:
  *     Matthieu Helleboid - initial API and implementation
  ******************************************************************************/
-package org.piwigo.remotesync.api;
+package org.piwigo.remotesync.api.client;
 
+import java.util.TimerTask;
+
+import org.piwigo.remotesync.api.sync.LoginJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class Job {
-
-	private static final Logger logger = LoggerFactory.getLogger(Job.class);
-	private static boolean running;
-
-	public synchronized void execute() {
-		if (running) {
-			return;
-		}
-		running = true;
+public class SessionTask extends TimerTask
+{
 	
+	private static final Logger logger = LoggerFactory.getLogger(SessionTask.class);
+	
+	private LoginJob loginJob = new LoginJob();
+	
+	public void run() {
 		try {
-			doExecute();
+			logger.debug("----------------------------");
+			loginJob.doLogout();
+			loginJob.execute();
+			logger.debug("----------------------------");
 		} catch (Exception e) {
-			logger.error("Error in job " + this, e);
-		} finally {
-			running = false;
+			logger.error("Error while refreshing session.. !");
 		}
 	}
-
-	public void executeInThread() {
-		Thread t = new Thread(new Runnable() {
-			public void run() {
-				execute();
-			}
-		});
-		t.start();
-	}
-
-	protected abstract void doExecute() throws Exception;
-
-	public boolean isRunning() {
-		return running;
-	}
-
+	
 }
