@@ -48,6 +48,9 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 		if (directory.equals(startDirectory))
 			return;
 
+		if( !importer.shouldImport(directory.getAbsolutePath()))
+			return;
+
 		if (legacyCache.getAlbumCacheElement() != null) {
 			logger.debug("Album is already in cache : " + directory);
 		} else {
@@ -66,6 +69,9 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 
 	protected void handleFile(File file, int depth, java.util.Collection<File> results) throws IOException {
 		LegacyCache legacyCache = legacyCaches.get(file.getParentFile());
+
+		if( !importer.shouldImport(file.getAbsolutePath()))
+			return;
 
 		if (legacyCache.containsImage(file)) {
 			logger.debug("Image already in cache : " + file);
