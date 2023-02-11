@@ -24,6 +24,9 @@ public class ImportItem
     @Column(name = "path", nullable = false, length = 255)
     private String myPath;
 
+    @Column(name = "url", nullable = false, length = 255)
+    private String myUrl;
+
     @Column(name = "album_id", nullable = false)
     private Integer myAlbumId;
 
@@ -48,6 +51,17 @@ public class ImportItem
     public ImportItem setPath(String path)
     {
         myPath = path;
+        return this;
+    }
+
+    public String getUrl()
+    {
+        return myUrl;
+    }
+
+    public ImportItem setUrl(String url)
+    {
+        myUrl = url;
         return this;
     }
 
