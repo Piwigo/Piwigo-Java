@@ -4,7 +4,7 @@
  * are made available under the terms of the GNU Public License v2.0
  * which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * 
+ *
  * Contributors:
  *     Matthieu Helleboid - initial API and implementation
  ******************************************************************************/
@@ -20,6 +20,7 @@ import org.apache.commons.io.DirectoryWalker;
 import org.piwigo.remotesync.api.Constants;
 import org.piwigo.remotesync.api.ISyncConfiguration;
 import org.piwigo.remotesync.api.cache.LegacyCache;
+import org.piwigo.remotesync.menalto.Importer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,10 +31,12 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 	protected ISyncConfiguration syncConfiguration;
 	protected File startDirectory;
 	protected Map<File, LegacyCache> legacyCaches = new HashMap<File, LegacyCache>();
+	private Importer importer;
 
 	protected SyncDirectoryWalker(ISyncConfiguration syncConfiguration) {
 		super(null, Constants.IMAGE_EXTENSIONS_FILTER, -1);
 		this.syncConfiguration = syncConfiguration;
+		importer = new Importer(syncConfiguration.getDirectory());
 	}
 
 	@Override
@@ -43,6 +46,9 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 
 		// do not create an album for root directory
 		if (directory.equals(startDirectory))
+			return;
+
+		if( !importer.shouldImport(directory.getAbsolutePath()))
 			return;
 
 		if (legacyCache.getAlbumCacheElement() != null) {
@@ -55,12 +61,17 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 				// FIXME : ignore me
 			}
 			logger.info("Creating album for " + directory);
-			legacyCache.addAlbum(createAlbum(directory, parentAlbumId));
+			Integer albumId = createAlbum(directory, parentAlbumId);
+			legacyCache.addAlbum(albumId);
+			importer.addAlbum(directory.getAbsolutePath(), albumId);
 		}
 	}
 
 	protected void handleFile(File file, int depth, java.util.Collection<File> results) throws IOException {
 		LegacyCache legacyCache = legacyCaches.get(file.getParentFile());
+
+		if( !importer.shouldImport(file.getAbsolutePath()))
+			return;
 
 		if (legacyCache.containsImage(file)) {
 			logger.debug("Image already in cache : " + file);
@@ -72,7 +83,9 @@ public abstract class SyncDirectoryWalker extends DirectoryWalker<File> {
 				// FIXME : ignore me
 			}
 			logger.info("Uploading " + file.getName() + " in album with ID " + albumId);
-			legacyCache.addImage(file, createImage(file, albumId));
+			Integer imageId = createImage(file, albumId);
+			legacyCache.addImage(file, imageId);
+			importer.addImage(file.getAbsolutePath(), albumId, imageId);
 		}
 	}
 

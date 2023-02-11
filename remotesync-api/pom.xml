@@ -4,7 +4,7 @@
   are made available under the terms of the GNU Public License v2.0
   which accompanies this distribution, and is available at
   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-  
+
   Contributors:
       Matthieu Helleboid - initial API and implementation
 -->
@@ -13,7 +13,29 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>remotesync-api</artifactId>
 	<name>Piwigo Remote Sync API</name>
+
+	<properties>
+		<hibernate.version>5.6.14.Final</hibernate.version>
+		<mariadb.version>3.0.6</mariadb.version>
+	</properties>
+
 	<dependencies>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core-jakarta</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>${mariadb.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>args4j</groupId>
 			<artifactId>args4j</artifactId>
@@ -135,6 +157,20 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

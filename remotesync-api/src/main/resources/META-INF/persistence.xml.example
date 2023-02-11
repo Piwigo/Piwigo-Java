@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="gallery3">
+        <class>se.rutgers.gallery.persistence.menalto.ImportItem</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mariadb://<host>>/gallery3"/>
+            <property name="javax.persistence.jdbc.user" value="<username>"/>
+            <property name="javax.persistence.jdbc.password" value="<password>"/>
+            <property name="javax.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDB103Dialect"/>
+        </properties>
+    </persistence-unit>
+</persistence>
