@@ -84,6 +84,7 @@ public class ProgressUI extends JPanel
 			if (imgFile == null)
 				return;
 			current = ImageIO.read(imgFile);
+			if(current == null){return;} //validation for 0kb image file
 		} catch (IOException e) {
 			return;
 		}
